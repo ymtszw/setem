@@ -8,5 +8,11 @@
   "dependencies": {
     "tree-sitter": "^0.17.1",
     "tree-sitter-elm": "^4.2.0"
+  },
+  "devDependencies": {
+    "jest": "^26.6.1"
+  },
+  "scripts": {
+    "test": "jest"
   }
 }
