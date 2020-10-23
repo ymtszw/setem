@@ -1,0 +1,8 @@
+{
+  "name": "setem",
+  "version": "0.0.1",
+  "description": "Set'em: record setter generator",
+  "main": "index.js",
+  "author": "Yu Matsuzawa <ymtszw@gmail.com>",
+  "license": "MIT"
+}
