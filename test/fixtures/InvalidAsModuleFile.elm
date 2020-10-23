@@ -1,5 +1,3 @@
-module SimpleRecord exposing (..)
-
 type alias R =
     { f1 : String
     , f2 : Int
