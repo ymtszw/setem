@@ -4,5 +4,9 @@
   "description": "Set'em: record setter generator",
   "main": "index.js",
   "author": "Yu Matsuzawa <ymtszw@gmail.com>",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "tree-sitter": "^0.17.1",
+    "tree-sitter-elm": "^4.2.0"
+  }
 }
