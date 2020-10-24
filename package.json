@@ -1,11 +1,25 @@
 {
   "name": "setem",
   "version": "0.0.1",
-  "description": "Set'em: record setter generator",
-  "main": "index.js",
+  "description": "Set'em: Elm record setter generator",
+  "main": "setem.js",
+  "bin": {
+    "setem": "setem.js"
+  },
+  "preferGlobal": false,
+  "keywords": [
+    "cli",
+    "elm",
+    "generator"
+  ],
+  "engines": {
+    "node": ">= 10"
+  },
   "author": "Yu Matsuzawa <ymtszw@gmail.com>",
   "license": "MIT",
   "dependencies": {
+    "chalk": "^4.1.0",
+    "commander": "^6.1.0",
     "tree-sitter": "^0.17.1",
     "tree-sitter-elm": "^4.2.0"
   },
