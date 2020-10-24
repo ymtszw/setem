@@ -46,7 +46,6 @@ test("generate from InvalidAsModuleFile", () => {
 test("generate from many files at once", () => {
   expect(
     generate([
-      "test/fixtures/InvalidAsModuleFile.elm",
       "test/fixtures/RecordDefAndExpr.elm",
       "test/fixtures/OnlyRecordDef.elm",
       "test/fixtures/OnlyRecordExpr.elm",
