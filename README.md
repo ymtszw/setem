@@ -81,7 +81,9 @@ Standard record updating syntax is:
 ...which is,
 
 * Not pipeline-friendly. You have to combine it with anonymous function like:
-  `x |> doSomething |> (\v -> { record | name = v }) |> doElse`
+  ```elm
+  x |> doSomething |> (\v -> { record | name = v }) |> doElse
+  ```
 * Not nest-friendly. You have to combine either `let in` or pattern matches:
   ```elm
   let
