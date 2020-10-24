@@ -98,7 +98,7 @@ Now, as discussed
 in the community, it is somewhat deliberate choice in the language design,
 to NOT provide "record setter/updater" syntax.
 
-* It encourages to create nicely named private functions rather than relying on verbose anonymous functions.
+* It encourages to create nicely named tol-level functions rather than relying on verbose anonymous functions.
 * Also it encourages to design flatter, simpler data structures (and possibly using custom types) to more precisely illustrate our requirements.
 * For unavoidable situations where setters are in strong demand, we can create "data" module with necessary setters exposed, which actually leads us to think about proper boundary of data and concerns. Never a bad thing!
 
