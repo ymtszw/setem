@@ -27,6 +27,7 @@
   "dependencies": {
     "chalk": "^4.1.0",
     "commander": "^6.1.0",
+    "glob": "^7.1.6",
     "tree-sitter": "^0.17.1",
     "tree-sitter-elm": "^4.2.0"
   },
