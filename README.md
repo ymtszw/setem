@@ -26,9 +26,9 @@ yarn add --dev setem
 ## Usage
 
 ```sh
-yarn setem --src src/ src/**/*.elm  # Depends on glob behavior of the shell
-yarn setem --src src/ src/          # Looks for all .elm files recursively
-(npx setem --src src/ src/**/*.elm)
+yarn setem --output src/ src/**/*.elm  # Depends on glob behavior of the shell
+yarn setem --output src/ src/          # Looks for all .elm files in src/ recursively
+(npx setem --output src/ src/**/*.elm)
 ```
 
 It generates `src/RecordSetter.elm` file like this:
