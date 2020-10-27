@@ -1,5 +1,5 @@
 # 🔸 setem 🔸
-![Version](https://img.shields.io/badge/version-0.0.1-blue.svg?cacheSeconds=2592000)
+[![npm](https://img.shields.io/npm/v/setem)](https://www.npmjs.com/package/setem)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](#)
 [![Twitter: gada\_twt](https://img.shields.io/twitter/follow/gada\_twt.svg?style=social)](https://twitter.com/gada\_twt)
 
