@@ -67,7 +67,7 @@ Say :help for help and :exit to exit! More at <https://elm-lang.org/0.19.1/repl>
 <function> : { b | name : a } -> a
 ```
 
-These getters are consice, pipeline-friendly (i.e. you can `x |> doSomething |> .name |> doElse`), therefore composition-friendly (there are packages with "lift"-ing functions that work in tandem with getters, such as [elm-form-decoder] or [elm-monocle]).
+These getters are concise, pipeline-friendly (i.e. you can `x |> doSomething |> .name |> doElse`), therefore composition-friendly (there are packages with "lift"-ing functions that work in tandem with getters, such as [elm-form-decoder] or [elm-monocle]).
 
 [elm-form-decoder]: https://gihtub.com/arowM/elm-form-decoder
 [elm-monocle]: https://github.com/arturopala/elm-monocle
