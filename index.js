@@ -9,8 +9,15 @@ parser.setLanguage(Elm);
 function sourceToIdentifiers(source, identifierSet = new Set()) {
   const tree = parser.parse(source);
   tree.rootNode
-    .descendantsOfType(["field_type", "field"])
-    .flatMap((f) => f.descendantsOfType(["lower_case_identifier"]))
+    .descendantsOfType(["field_type", "field", "record_pattern"])
+    .flatMap((f) => {
+      if (f.type === "record_pattern") {
+        return f.descendantsOfType(["lower_case_identifier"]);
+      } else {
+        // Use only first lower_case_identifier before colon or equal in field def/expr
+        return f.children.find((c) => c.type === "lower_case_identifier") || [];
+      }
+    })
     .forEach((identifier) => {
       identifierSet.add(identifier.text);
     });
