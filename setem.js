@@ -3,6 +3,7 @@ const fs = require("fs");
 const path = require("path");
 const { Command } = require("commander");
 const chalk = require("chalk");
+const glob = require("glob");
 const { name, description, version } = require("./package.json");
 const generate = require("./index");
 
@@ -29,8 +30,9 @@ Must be fully qualified
   .arguments("<paths...>")
   .action(mainAction);
 
-function mainAction(paths) {
+function mainAction(argPaths) {
   const module = program.module || "RecordSetter";
+  const paths = [...new Set(expandDirs(argPaths))];
   if (program.verbose) for (const path of paths) fileLoaded(path);
   const generated = generate(paths, module);
 
@@ -49,6 +51,17 @@ function mainAction(paths) {
       });
     });
   }
+}
+
+function expandDirs(paths) {
+  return paths.flatMap((p) => {
+    const stats = fs.statSync(p);
+    if (stats.isDirectory()) {
+      return glob.sync(path.resolve(p, "**/*.elm"));
+    } else {
+      return path.resolve(process.cwd(), p);
+    }
+  });
 }
 
 function fileLoaded(path) {
