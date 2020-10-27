@@ -17,8 +17,8 @@ program
     "Print generated file contents to stdout instead of a file"
   )
   .option(
-    "--src <srcDirectory>",
-    "Set Elm src directory. Defaults to current working directory"
+    "--src, --output <srcDirectory>",
+    "Set Elm src directory to write generated file to. Defaults to current working directory"
   )
   .option(
     "--module <moduleName>",
@@ -30,17 +30,20 @@ Must be fully qualified
   .arguments("<paths...>")
   .action(mainAction);
 
-function mainAction(argPaths) {
-  const module = program.module || "RecordSetter";
-  const paths = [...new Set(expandDirs(argPaths))];
-  if (program.verbose) for (const path of paths) fileLoaded(path);
+function mainAction(args, options) {
+  const module = options.module || "RecordSetter";
+  const paths = [...new Set(expandDirs(args))];
+  if (options.verbose) for (const path of paths) fileLoaded(path);
   const generated = generate(paths, module);
 
-  if (program.stdout) {
+  if (options.stdout) {
     console.log(generated);
   } else {
     const srcFilename = path.join(...module.split(".")) + ".elm";
-    const filename = path.resolve(program.src || process.cwd(), srcFilename);
+    const filename = path.resolve(
+      options.src || options.output || process.cwd(),
+      srcFilename
+    );
     const dir = path.dirname(filename);
     fs.mkdir(dir, { recursive: true }, (e, path) => {
       if (e) throw e;
