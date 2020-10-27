@@ -27,7 +27,7 @@ yarn add --dev setem
 
 ```sh
 yarn setem --src src/ src/**/*.elm  # Depends on glob behavior of the shell
-yarn setem --src src/ src/          # Automatically looks for all .elm files
+yarn setem --src src/ src/          # Looks for all .elm files recursively
 (npx setem --src src/ src/**/*.elm)
 ```
 

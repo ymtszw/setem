@@ -4,6 +4,10 @@
 
 * ...
 
+## 0.0.3
+
+* Expand directories in path
+
 ## 0.0.2
 
 * Generate from extensible records
