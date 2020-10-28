@@ -4,6 +4,10 @@
 
 * ...
 
+## 0.1.0
+
+* Support `--output` as an alias to `--src`
+
 ## 0.0.3
 
 * Expand directories in path
