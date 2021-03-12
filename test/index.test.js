@@ -7,28 +7,28 @@ module RecordSetter exposing (..)
 
 
 s_f1 : a -> { b | f1 : a } -> { b | f1 : a }
-s_f1 value record =
-    { record | f1 = value }
+s_f1 value__ record__ =
+    { record__ | f1 = value__ }
 
 
 s_f2 : a -> { b | f2 : a } -> { b | f2 : a }
-s_f2 value record =
-    { record | f2 = value }
+s_f2 value__ record__ =
+    { record__ | f2 = value__ }
 
 
 s_f3 : a -> { b | f3 : a } -> { b | f3 : a }
-s_f3 value record =
-    { record | f3 = value }
+s_f3 value__ record__ =
+    { record__ | f3 = value__ }
 
 
 s_f3_f1 : a -> { b | f3_f1 : a } -> { b | f3_f1 : a }
-s_f3_f1 value record =
-    { record | f3_f1 = value }
+s_f3_f1 value__ record__ =
+    { record__ | f3_f1 = value__ }
 
 
 s_f3_f2 : a -> { b | f3_f2 : a } -> { b | f3_f2 : a }
-s_f3_f2 value record =
-    { record | f3_f2 = value }
+s_f3_f2 value__ record__ =
+    { record__ | f3_f2 = value__ }
 `;
 
 test("generate from RecordDefAndExpr", () => {
@@ -63,18 +63,18 @@ module RecordSetter exposing (..)
 
 
 s_f1 : a -> { b | f1 : a } -> { b | f1 : a }
-s_f1 value record =
-    { record | f1 = value }
+s_f1 value__ record__ =
+    { record__ | f1 = value__ }
 
 
 s_f2 : a -> { b | f2 : a } -> { b | f2 : a }
-s_f2 value record =
-    { record | f2 = value }
+s_f2 value__ record__ =
+    { record__ | f2 = value__ }
 
 
 s_f3 : a -> { b | f3 : a } -> { b | f3 : a }
-s_f3 value record =
-    { record | f3 = value }
+s_f3 value__ record__ =
+    { record__ | f3 = value__ }
 `);
 });
 
@@ -87,17 +87,17 @@ module RecordSetter exposing (..)
 
 
 s_f1 : a -> { b | f1 : a } -> { b | f1 : a }
-s_f1 value record =
-    { record | f1 = value }
+s_f1 value__ record__ =
+    { record__ | f1 = value__ }
 
 
 s_f2 : a -> { b | f2 : a } -> { b | f2 : a }
-s_f2 value record =
-    { record | f2 = value }
+s_f2 value__ record__ =
+    { record__ | f2 = value__ }
 
 
 s_f3 : a -> { b | f3 : a } -> { b | f3 : a }
-s_f3 value record =
-    { record | f3 = value }
+s_f3 value__ record__ =
+    { record__ | f3 = value__ }
 `);
 });

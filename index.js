@@ -32,11 +32,13 @@ module ${moduleName} exposing (..)
 `;
 }
 
-function setterDefinition(recordFieldIdentifier) {
-  return `s_${recordFieldIdentifier} : a -> { b | ${recordFieldIdentifier} : a } -> { b | ${recordFieldIdentifier} : a }
-s_${recordFieldIdentifier} value record =
-    { record | ${recordFieldIdentifier} = value }
+function setterDefinition(prefix) {
+  return function(recordFieldIdentifier) {
+    return `${prefix}${recordFieldIdentifier} : a -> { b | ${recordFieldIdentifier} : a } -> { b | ${recordFieldIdentifier} : a }
+${prefix}${recordFieldIdentifier} value__ record__ =
+    { record__ | ${recordFieldIdentifier} = value__ }
 `;
+  }
 }
 
 const cwd = process.cwd();
@@ -46,10 +48,10 @@ function reducePerFile(identifierSet, filepath) {
   return sourceToIdentifiers(source, identifierSet);
 }
 
-function generate(filepaths = [], moduleName = "RecordSetter") {
+function generate(filepaths = [], moduleName = "RecordSetter", prefix = "s_") {
   const uniqIdentifiers = [filepaths].flat().reduce(reducePerFile, new Set());
   const sortedUniqIdentifiers = [...uniqIdentifiers].sort();
-  const setters = sortedUniqIdentifiers.map(setterDefinition);
+  const setters = sortedUniqIdentifiers.map(setterDefinition(prefix));
   return [moduleDeclaration(moduleName), ...setters].join("\n\n");
 }
 
