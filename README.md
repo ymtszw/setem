@@ -41,13 +41,13 @@ module RecordSetter exposing (..)
 
 
 s_f1 : a -> { b | f1 : a } -> { b | f1 : a }
-s_f1 value record =
-    { record | f1 = value }
+s_f1 value__ record__ =
+    { record__ | f1 = value__ }
 
 
 s_f2 : a -> { b | f2 : a } -> { b | f2 : a }
-s_f2 value record =
-    { record | f2 = value }
+s_f2 value__ record__ =
+    { record__ | f2 = value__ }
 
 ...
 ```

@@ -21,6 +21,10 @@ program
     "Set Elm src directory to write generated file to. Defaults to current working directory"
   )
   .option(
+    "--prefix <function prefix>",
+    "Set prefix of generated functions. Defaults to `s_`"
+  )
+  .option(
     "--module <moduleName>",
     `Set generated module name (also, file name). Defaults to \`RecordSetter\`.
 Must be fully qualified
@@ -32,9 +36,10 @@ Must be fully qualified
 
 function mainAction(args, options) {
   const module = options.module || "RecordSetter";
+  const prefix = options.prefix === undefined ? "s_" : options.prefix;
   const paths = [...new Set(expandDirs(args))];
   if (options.verbose) for (const path of paths) fileLoaded(path);
-  const generated = generate(paths, module);
+  const generated = generate(paths, module, prefix);
 
   if (options.stdout) {
     console.log(generated);
