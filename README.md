@@ -159,6 +159,20 @@ With generated setters it is possible to:
 
 Setters are ordinary functions. Pass them to any high-order functions as needed!
 
+## Tips
+
+### Q. Should we add setem-generated file to git?
+
+A. Up to you. Personally I do. If you are irritated by cluttered diffs every time you generated `setem`,
+create a `.gitattributes` file with a following entry:
+
+```ini
+src/RecordSetter.elm linguist-generated=true
+```
+
+Paths set as `linguist-generated=true` are collapsed by default on GitHub pull request diffs, reducing visual clutter.
+See https://github.com/github/linguist/blob/master/docs/overrides.md#generated-code
+
 ## Implementation note
 
 It is based on [tree-sitter-elm](https://github.com/Razzeee/tree-sitter-elm). Quite fast!
