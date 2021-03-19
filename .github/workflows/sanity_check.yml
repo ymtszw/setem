@@ -1,0 +1,33 @@
+name: sanity_check
+
+on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - reopened
+  push:
+    branches:
+      - master
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  run-checks: # <== This name is referenced as a merge requirement for master branch
+    runs-on: ubuntu-18.04
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/cache@v2
+        with:
+          path: |
+            node_modules
+          key: v1-setem-${{ hashFiles('yarn.lock') }}-${{ github.sha }}
+          restore-keys: |
+            v1-setem-${{ hashFiles('yarn.lock') }}-
+      - uses: actions/setup-node@v2.1.2
+        with:
+          node-version: 14
+      - run: yarn
+      - run: yarn test
