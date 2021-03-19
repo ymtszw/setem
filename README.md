@@ -1,4 +1,5 @@
 # 🔸 setem 🔸
+[![sanity_check](https://github.com/ymtszw/setem/actions/workflows/sanity_check.yml/badge.svg)](https://github.com/ymtszw/setem/actions/workflows/sanity_check.yml)
 [![npm](https://img.shields.io/npm/v/setem)](https://www.npmjs.com/package/setem)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](#)
 [![Twitter: gada\_twt](https://img.shields.io/twitter/follow/gada\_twt.svg?style=social)](https://twitter.com/gada\_twt)
