@@ -1,6 +1,6 @@
 {
   "name": "setem",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Set'em: Elm record setter generator",
   "repository": {
     "url": "https://github.com/ymtszw/setem"
