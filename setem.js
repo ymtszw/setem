@@ -5,7 +5,7 @@ const { Command } = require("commander");
 const chalk = require("chalk");
 const glob = require("glob");
 const { name, description, version } = require("./package.json");
-const generate = require("./index");
+const { generate } = require("./index");
 
 const program = new Command();
 program
