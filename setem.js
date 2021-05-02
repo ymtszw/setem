@@ -36,7 +36,7 @@ Must be fully qualified
 
 function mainAction(args, options) {
   const module = options.module || "RecordSetter";
-  const prefix = options.prefix === undefined ? "s_" : options.prefix;
+  const prefix = options.prefix || "s_";
   const paths = [...new Set(expandDirs(args))];
   if (options.verbose) for (const path of paths) fileLoaded(path);
   const generated = generate(paths, module, prefix);
