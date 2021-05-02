@@ -30,8 +30,14 @@ program
 Must be fully qualified
 `
   )
+  .option(
+    "--elm-json <elm.json file path>",
+    `Set path to elm.json file you would like to use for automatic source and dependency detection.
+Takes effect only if explicit paths are NOT given.
+Defaults to ./elm.json`
+  )
   .option("--verbose", "Print all loaded files")
-  .arguments("<paths...>")
+  .arguments("[paths...]")
   .action(mainAction);
 
 function mainAction(args, options) {
