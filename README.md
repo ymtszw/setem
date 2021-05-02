@@ -27,8 +27,9 @@ yarn add --dev setem
 ## Usage
 
 ```sh
-yarn setem --output src/ src/**/*.elm  # Depends on glob behavior of the shell
+yarn setem --output src/               # Looks for all .elm files in your "source-directories", "dependencies" and "test-dependencies"
 yarn setem --output src/ src/          # Looks for all .elm files in src/ recursively
+yarn setem --output src/ src/**/*.elm  # Depends on glob behavior of the shell
 (npx setem --output src/ src/**/*.elm)
 ```
 
