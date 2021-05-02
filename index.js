@@ -2,9 +2,12 @@ const Parser = require("tree-sitter");
 const Elm = require("tree-sitter-elm");
 const fs = require("fs");
 const path = require("path");
+const chalk = require("chalk");
+const glob = require("glob");
 
 module.exports = {
   generate,
+  resolvePaths,
 };
 
 /**
@@ -64,4 +67,51 @@ function moduleDeclaration(moduleName) {
 
 module ${moduleName} exposing (..)
 `;
+}
+
+/**
+ * Resolves and returns absolute paths of input Elm source files.
+ * @param {string[]} paths List of relative Elm source files retrieved from command line arguments. If empty, it enumerates files derived from `elmJsonFile`.
+ * @param {string} elmJsonFile Path to elm.json file. Defaults to "./elm.json"
+ * @returns string[]
+ */
+function resolvePaths(paths, elmJsonFile = "./elm.json") {
+  if (paths.length === 0) {
+    return collectAllSourcePathsFromElmJson(elmJsonFile);
+  } else {
+    return [...new Set(expandDirs(args))];
+  }
+}
+
+function collectAllSourcePathsFromElmJson(elmJsonFile) {
+  const elmJsonFileAbs = path.resolve(cwd, elmJsonFile);
+  const elmProjectDir = path.dirname(elmJsonFileAbs);
+  let elmJsonRaw;
+  try {
+    elmJsonRaw = fs.readFileSync(elmJsonFileAbs, { encoding: "utf8" });
+  } catch (error) {
+    logError(error);
+    process.exit(1);
+  }
+  const elmJson = JSON.parse(elmJsonRaw);
+  const sourceDirectories = elmJson["source-directories"].map((dir) => {
+    return path.resolve(elmProjectDir, dir);
+  });
+  // TODO Resolve dependencies
+  return [...new Set(expandDirs(sourceDirectories))];
+}
+
+function expandDirs(paths) {
+  return paths.flatMap((p) => {
+    const stats = fs.statSync(p);
+    if (stats.isDirectory()) {
+      return glob.sync(path.resolve(p, "**/*.elm"));
+    } else {
+      return path.resolve(process.cwd(), p);
+    }
+  });
+}
+
+function logError(message) {
+  console.error(chalk.red(message));
 }

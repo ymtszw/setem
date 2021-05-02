@@ -3,9 +3,8 @@ const fs = require("fs");
 const path = require("path");
 const { Command } = require("commander");
 const chalk = require("chalk");
-const glob = require("glob");
 const { name, description, version } = require("./package.json");
-const { generate } = require("./index");
+const { generate, resolvePaths } = require("./index");
 
 const program = new Command();
 program
@@ -43,7 +42,7 @@ Defaults to ./elm.json`
 function mainAction(args, options) {
   const module = options.module || "RecordSetter";
   const prefix = options.prefix || "s_";
-  const paths = [...new Set(expandDirs(args))];
+  const paths = resolvePaths(args, options.elmJson || "./elm.json");
   if (options.verbose) for (const path of paths) fileLoaded(path);
   const generated = generate(paths, module, prefix);
 
@@ -65,17 +64,6 @@ function mainAction(args, options) {
       });
     });
   }
-}
-
-function expandDirs(paths) {
-  return paths.flatMap((p) => {
-    const stats = fs.statSync(p);
-    if (stats.isDirectory()) {
-      return glob.sync(path.resolve(p, "**/*.elm"));
-    } else {
-      return path.resolve(process.cwd(), p);
-    }
-  });
 }
 
 function fileLoaded(path) {
