@@ -9,9 +9,9 @@
   "bugs": {
     "url": "https://github.com/ymtszw/setem/issues"
   },
-  "main": "setem.js",
+  "main": "src/setem.js",
   "bin": {
-    "setem": "setem.js"
+    "setem": "src/setem.js"
   },
   "preferGlobal": false,
   "keywords": [
@@ -36,6 +36,7 @@
     "readme-md-generator": "^1.0.0"
   },
   "scripts": {
+    "setem": "src/setem.js",
     "test": "jest"
   }
 }
