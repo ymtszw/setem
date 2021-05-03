@@ -2,8 +2,8 @@ const Parser = require("tree-sitter");
 const Elm = require("tree-sitter-elm");
 const fs = require("fs");
 const path = require("path");
-const chalk = require("chalk");
 const glob = require("glob");
+const assert = require("assert").strict;
 
 module.exports = {
   generate,
@@ -96,7 +96,13 @@ function collectAllSourcePathsFromElmJson(elmJsonFile) {
 function getElmJson(elmJsonFile) {
   const elmJsonFileAbs = path.resolve(cwd, elmJsonFile);
   const elmJsonRaw = fs.readFileSync(elmJsonFileAbs, { encoding: "utf8" });
-  return JSON.parse(elmJsonRaw);
+  const elmJson = JSON.parse(elmJsonRaw);
+  assert.equal(
+    elmJson.type,
+    "application",
+    "setem should not be used in package, to avoid module name conflict!"
+  );
+  return elmJson;
 }
 
 function expandDirs(paths) {

@@ -265,4 +265,11 @@ describe("resolvePaths()", () => {
       `${CWD}/src/fixtures/elm-spa-example/tests/RoutingTests.elm`,
     ]);
   });
+
+  test("should throw if package project is specified", () => {
+    expect(() => {
+      resolvePaths([], "src/fixtures/elm-test/elm.json");
+    }).toThrow();
+  });
+});
 });
