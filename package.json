@@ -33,6 +33,7 @@
   },
   "devDependencies": {
     "jest": "^26.6.1",
+    "@types/jest": "^26.0.23",
     "readme-md-generator": "^1.0.0"
   },
   "scripts": {
