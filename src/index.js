@@ -86,13 +86,7 @@ function resolvePaths(paths, elmJsonFile = "./elm.json") {
 function collectAllSourcePathsFromElmJson(elmJsonFile) {
   const elmJsonFileAbs = path.resolve(cwd, elmJsonFile);
   const elmProjectDir = path.dirname(elmJsonFileAbs);
-  let elmJsonRaw;
-  try {
-    elmJsonRaw = fs.readFileSync(elmJsonFileAbs, { encoding: "utf8" });
-  } catch (error) {
-    logError(error);
-    process.exit(1);
-  }
+  const elmJsonRaw = fs.readFileSync(elmJsonFileAbs, { encoding: "utf8" });
   const elmJson = JSON.parse(elmJsonRaw);
   const sourceDirectories = elmJson["source-directories"].map((dir) => {
     return path.resolve(elmProjectDir, dir);
@@ -110,8 +104,4 @@ function expandDirs(paths) {
       return path.resolve(process.cwd(), p);
     }
   });
-}
-
-function logError(message) {
-  console.error(chalk.red(message));
 }
