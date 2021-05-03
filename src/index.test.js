@@ -190,7 +190,7 @@ describe("resolvePaths()", () => {
   });
 
   test("should recursively expand directory paths", () => {
-    expect(resolvePaths(["src/fixtures/"])).toEqual([
+    expect(resolvePaths(["src/fixtures/elm-spa-example/src/"])).toEqual([
       `${CWD}/src/fixtures/elm-spa-example/src/Api.elm`,
       `${CWD}/src/fixtures/elm-spa-example/src/Api/Endpoint.elm`,
       `${CWD}/src/fixtures/elm-spa-example/src/Article.elm`,
@@ -224,13 +224,6 @@ describe("resolvePaths()", () => {
       `${CWD}/src/fixtures/elm-spa-example/src/Timestamp.elm`,
       `${CWD}/src/fixtures/elm-spa-example/src/Username.elm`,
       `${CWD}/src/fixtures/elm-spa-example/src/Viewer.elm`,
-      `${CWD}/src/fixtures/elm-spa-example/tests/RoutingTests.elm`,
-      `${CWD}/src/fixtures/ExtensibleRecord.elm`,
-      `${CWD}/src/fixtures/InvalidAsModuleFile.elm`,
-      `${CWD}/src/fixtures/OnlyRecordDef.elm`,
-      `${CWD}/src/fixtures/OnlyRecordExpr.elm`,
-      `${CWD}/src/fixtures/PatternMatch.elm`,
-      `${CWD}/src/fixtures/RecordDefAndExpr.elm`,
     ]);
   });
 
