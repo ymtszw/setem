@@ -3,7 +3,7 @@ const fs = require("fs");
 const path = require("path");
 const { Command } = require("commander");
 const chalk = require("chalk");
-const { name, description, version } = require("./package.json");
+const { name, description, version } = require("../package.json");
 const { generate, resolvePaths } = require("./index");
 
 const program = new Command();
