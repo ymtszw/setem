@@ -79,7 +79,7 @@ function resolvePaths(paths, elmJsonFile = "./elm.json") {
   if (paths.length === 0) {
     return collectAllSourcePathsFromElmJson(elmJsonFile);
   } else {
-    return [...new Set(expandDirs(args))];
+    return [...new Set(expandDirs(paths))];
   }
 }
 
