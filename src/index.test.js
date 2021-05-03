@@ -269,6 +269,7 @@ describe("resolvePaths()", () => {
       `${CWD}/src/fixtures/elm-spa-example/src/Timestamp.elm`,
       `${CWD}/src/fixtures/elm-spa-example/src/Username.elm`,
       `${CWD}/src/fixtures/elm-spa-example/src/Viewer.elm`,
+      `${CWD}/src/fixtures/elm-spa-example/tests/RoutingTests.elm`,
     ]);
   });
 });

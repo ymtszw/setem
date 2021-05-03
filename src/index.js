@@ -91,8 +91,9 @@ function collectAllSourcePathsFromElmJson(elmJsonFile) {
   const sourceDirectories = elmJson["source-directories"].map((dir) => {
     return path.resolve(elmProjectDir, dir);
   });
+  const testDirectory = path.resolve(elmProjectDir, "tests");
   // TODO Resolve dependencies
-  return [...new Set(expandDirs(sourceDirectories))];
+  return [...new Set(expandDirs([...sourceDirectories, testDirectory]))];
 }
 
 function expandDirs(paths) {
