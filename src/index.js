@@ -8,6 +8,7 @@ const assert = require("assert").strict;
 module.exports = {
   generate,
   resolvePaths,
+  resolveDependencies,
 };
 
 /**
@@ -113,5 +114,30 @@ function expandDirs(paths) {
     } else {
       return path.resolve(process.cwd(), p);
     }
+  });
+}
+
+/**
+ * Resolves and returns absolute paths of versioned dependency directories.
+ * @param {string} elmJsonFile Path to elm.json file. Defaults to "./elm.json"
+ * @returns string[]
+ */
+function resolveDependencies(elmJsonFile = ".elm/json") {
+  const elmJson = getElmJson(elmJsonFile);
+  const elmVersion = elmJson["elm-version"];
+  const elmHome =
+    process.env.ELM_HOME || path.resolve(process.env.HOME, ".elm"); // XXX Windows aren't supported
+  const packagesDir = path.resolve(elmHome, elmVersion, "packages");
+  return [
+    ...fromDependencyObject(elmJson["dependencies"].direct, packagesDir),
+    ...fromDependencyObject(elmJson["dependencies"].indirect, packagesDir),
+    ...fromDependencyObject(elmJson["test-dependencies"].direct, packagesDir),
+    ...fromDependencyObject(elmJson["test-dependencies"].indirect, packagesDir),
+  ];
+}
+
+function fromDependencyObject(obj, packagesDir) {
+  return Object.entries(obj).map(([authorAndPackage, version]) => {
+    return path.resolve(packagesDir, authorAndPackage, version);
   });
 }
