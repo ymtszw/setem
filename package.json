@@ -37,6 +37,7 @@
     "readme-md-generator": "^1.0.0"
   },
   "scripts": {
+    "postinstall": "cd src/fixtures/elm-spa-example/ && elm make src/Main.elm --output elm.js",
     "setem": "src/setem.js",
     "test": "jest"
   }
