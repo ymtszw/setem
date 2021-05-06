@@ -187,6 +187,35 @@ f3_f2 value__ record__ =
     { record__ | f3_f2 = value__ }
 `);
   });
+
+  test("should generate with elm.json (dependencies included)", () => {
+    const elmJsonFile = "src/fixtures/elm-spa-example/elm.json";
+    const sources = resolvePaths([], elmJsonFile);
+    const fixture = fs.readFileSync("src/fixtures/elm-spa-example-cli-result", {
+      encoding: "utf8",
+    });
+
+    expect(generate(sources, "RecordSetter", "s_", elmJsonFile)).toEqual(
+      fixture
+    );
+
+    // Cache created
+    const cacheDir = fs.readdirSync(
+      "src/fixtures/elm-spa-example/elm-stuff/setem/cache"
+    );
+    expect(cacheDir.length).toBeGreaterThanOrEqual(1);
+    const cacheFile = path.resolve(
+      "src/fixtures/elm-spa-example/elm-stuff/setem/cache",
+      cacheDir[0]
+    );
+    const cache = fs.readFileSync(cacheFile, { encoding: "utf8" });
+    expect(cache.split("\n")).toHaveLength(134);
+
+    // Idempotency
+    expect(generate(sources, "RecordSetter", "s_", elmJsonFile)).toEqual(
+      fixture
+    );
+  });
 });
 
 describe("resolvePaths()", () => {
@@ -341,7 +370,7 @@ describe("getIdentifiersAndEnsureCache()", () => {
   });
 
   const HOME = process.env.HOME;
-  test("should generate and save cache", () => {
+  test("should generate and save cache for a dependency", () => {
     const cacheFile = path.resolve("tmp", "cache.txt");
 
     // Generates identifiers and save cache, if cache file does not exist
@@ -394,5 +423,17 @@ update`);
       "tail",
       "update",
     ]);
+  });
+
+  test("should generate and save cache for dependencies in a project (combined with resolveDependencies())", () => {
+    const deps = resolveDependencies("src/fixtures/elm-spa-example/elm.json");
+    const cacheFile = path.resolve("tmp", "cache.txt");
+
+    // Generates many identifiers from deps
+    expect(getIdentifiersAndEnsureCache(deps, cacheFile)).toHaveLength(134);
+    // Idempotency
+    expect(getIdentifiersAndEnsureCache(deps, cacheFile)).toHaveLength(134);
+    // Respect cache
+    expect(getIdentifiersAndEnsureCache([], cacheFile)).toHaveLength(134);
   });
 });
