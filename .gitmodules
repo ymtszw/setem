@@ -1,3 +1,6 @@
 [submodule "test/fixtures/elm-spa-example"]
-	path = test/fixtures/elm-spa-example
+	path = src/fixtures/elm-spa-example
 	url = git@github.com:rtfeldman/elm-spa-example
+[submodule "src/fixtures/elm-test"]
+	path = src/fixtures/elm-test
+	url = git@github.com:elm-explorations/test

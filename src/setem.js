@@ -3,9 +3,8 @@ const fs = require("fs");
 const path = require("path");
 const { Command } = require("commander");
 const chalk = require("chalk");
-const glob = require("glob");
-const { name, description, version } = require("./package.json");
-const generate = require("./index");
+const { name, description, version } = require("../package.json");
+const { generate, resolvePaths } = require("./index");
 
 const program = new Command();
 program
@@ -30,16 +29,23 @@ program
 Must be fully qualified
 `
   )
+  .option(
+    "--elm-json <elm.json file path>",
+    `Set path to elm.json file you would like to use for automatic source and dependency detection.
+Takes effect only if explicit paths are NOT given.
+Defaults to ./elm.json`
+  )
   .option("--verbose", "Print all loaded files")
-  .arguments("<paths...>")
+  .arguments("[paths...]")
   .action(mainAction);
 
 function mainAction(args, options) {
   const module = options.module || "RecordSetter";
-  const prefix = options.prefix === undefined ? "s_" : options.prefix;
-  const paths = [...new Set(expandDirs(args))];
+  const prefix = options.prefix || "s_";
+  const elmJsonFile = options.elmJson; // Can be undefined; see resolvePaths() and other functions for default behavior
+  const paths = resolvePaths(args, elmJsonFile);
   if (options.verbose) for (const path of paths) fileLoaded(path);
-  const generated = generate(paths, module, prefix);
+  const generated = generate(paths, module, prefix, elmJsonFile);
 
   if (options.stdout) {
     console.log(generated);
@@ -59,17 +65,6 @@ function mainAction(args, options) {
       });
     });
   }
-}
-
-function expandDirs(paths) {
-  return paths.flatMap((p) => {
-    const stats = fs.statSync(p);
-    if (stats.isDirectory()) {
-      return glob.sync(path.resolve(p, "**/*.elm"));
-    } else {
-      return path.resolve(process.cwd(), p);
-    }
-  });
 }
 
 function fileLoaded(path) {

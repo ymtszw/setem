@@ -2,3 +2,4 @@ node_modules/
 RecordSetter.elm
 tags
 yarn-error.log
+tmp/

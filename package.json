@@ -9,9 +9,9 @@
   "bugs": {
     "url": "https://github.com/ymtszw/setem/issues"
   },
-  "main": "setem.js",
+  "main": "src/setem.js",
   "bin": {
-    "setem": "setem.js"
+    "setem": "src/setem.js"
   },
   "preferGlobal": false,
   "keywords": [
@@ -32,10 +32,15 @@
     "tree-sitter-elm": "^4.2.0"
   },
   "devDependencies": {
+    "@types/jest": "^26.0.23",
+    "elm": "^0.19.1-5",
     "jest": "^26.6.1",
     "readme-md-generator": "^1.0.0"
   },
   "scripts": {
-    "test": "jest"
+    "postinstall": "cd src/fixtures/elm-spa-example/ && ../../../node_modules/.bin/elm make src/Main.elm --output elm.js",
+    "setem": "src/setem.js",
+    "test": "jest",
+    "test:cli": "src/setem.test.sh"
   }
 }
