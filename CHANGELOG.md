@@ -4,6 +4,10 @@
 
 * ...
 
+## 0.3.0
+
+* Support generation for an Elm project, including dependencies!
+
 ## 0.2.0
 
 * Support `--prefix` option ([#1](https://github.com/ymtszw/setem/pull/1)). Thanks [@choonkeat](https://github.com/)!
