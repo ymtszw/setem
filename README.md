@@ -27,11 +27,18 @@ yarn add --dev setem
 ## Usage
 
 ```sh
-yarn setem --output src/               # Looks for all .elm files in your "source-directories", "dependencies" and "test-dependencies"
-yarn setem --output src/ src/          # Looks for all .elm files in src/ recursively
-yarn setem --output src/ src/**/*.elm  # Depends on glob behavior of the shell
-(npx setem --output src/ src/**/*.elm)
+# Generates for an Elm project (including dependencies)
+yarn setem --output src/                                 # For Elm project cwd. "elm.json" file must exist
+yarn setem --output src/ --elm-json sub_project/elm.json # For non-cwd Elm project, targeted by "elm.json" file path
+
+# Only generates from specific files (NOT including dependencies)
+yarn setem --output src/ src/Main.elm                    # From a single source file
+yarn setem --output src/ src/Main.elm src/Data/User.elm  # From multiple source files
+yarn setem --output src/ src/**/*.elm                    # From multiple source files resolved by glob in your shell
+yarn setem --output src/ src/                            # From multiple source files in a specific directory, expanded recursively
 ```
+
+(`npx` or global install also work)
 
 It generates `src/RecordSetter.elm` file like this:
 
