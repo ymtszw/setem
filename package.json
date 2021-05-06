@@ -32,12 +32,13 @@
     "tree-sitter-elm": "^4.2.0"
   },
   "devDependencies": {
-    "jest": "^26.6.1",
     "@types/jest": "^26.0.23",
+    "elm": "^0.19.1-5",
+    "jest": "^26.6.1",
     "readme-md-generator": "^1.0.0"
   },
   "scripts": {
-    "postinstall": "cd src/fixtures/elm-spa-example/ && elm make src/Main.elm --output elm.js",
+    "postinstall": "cd src/fixtures/elm-spa-example/ && ../../../node_modules/.bin/elm make src/Main.elm --output elm.js",
     "setem": "src/setem.js",
     "test": "jest"
   }
