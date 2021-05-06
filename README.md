@@ -189,6 +189,10 @@ The generator looks for both record type *definitions* and record data *expressi
 It generates setters of not yet used fields (or even, ones you are not going to use at all.)
 Unused ones are expected to be sorted out by Dead-Code Elimination feature of `elm make --optimize`.
 
+If you do not give explicit `paths` as command line arguments, `setem` reads your `elm.json` file
+and generates setters not only from your `"source-directories"` but from your dependencies as well.
+In this scenario, tokens from your dependencies are cached in your `elm-stuff/setem/` directory.
+
 ## Author & License
 
 MIT License (c) **Yu Matsuzawa**
