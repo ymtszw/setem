@@ -4,11 +4,13 @@ const fs = require("fs");
 const path = require("path");
 const glob = require("glob");
 const assert = require("assert").strict;
+const crypto = require("crypto");
 
 module.exports = {
   generate,
   resolvePaths,
   resolveDependencies,
+  getIdentifiersAndEnsureCache,
 };
 
 /**
@@ -16,18 +18,27 @@ module.exports = {
  * @param {string[]} filepaths File paths to traverse.
  * @param {string} moduleName Module name to render. Defaults to "RecordSetter"
  * @param {string} prefix Function prefix. Defaults to "s_"
+ * @param {string} elmJsonFile Path to elm.json file. If not given, it does not generate setters from dependencies
  * @returns string
  */
-function generate(filepaths = [], moduleName = "RecordSetter", prefix = "s_") {
+function generate(
+  filepaths = [],
+  moduleName = "RecordSetter",
+  prefix = "s_",
+  elmJsonFile = null
+) {
   const uniqIdentifiers = [filepaths].flat().reduce(reducePerFile, new Set());
-  const sortedUniqIdentifiers = [...uniqIdentifiers].sort();
+  const dependencyIdentifiers = [];
+  // const dependencyIdentifiers = collectIdentifiersFromDependencies(elmJsonFile);
+  const sortedUniqIdentifiers = [
+    ...new Set([...uniqIdentifiers, ...dependencyIdentifiers]),
+  ].sort();
   const setters = sortedUniqIdentifiers.map(setterDefinition(prefix));
   return [moduleDeclaration(moduleName), ...setters].join("\n\n");
 }
 
-const cwd = process.cwd();
 function reducePerFile(identifierSet, filepath) {
-  const abspath = path.resolve(cwd, filepath);
+  const abspath = path.resolve(filepath);
   const source = fs.readFileSync(abspath, { encoding: "utf8" });
   return sourceToIdentifiers(source, identifierSet);
 }
@@ -95,7 +106,7 @@ function collectAllSourcePathsFromElmJson(elmJsonFile) {
 }
 
 function getElmJson(elmJsonFile) {
-  const elmJsonFileAbs = path.resolve(cwd, elmJsonFile);
+  const elmJsonFileAbs = path.resolve(elmJsonFile);
   const elmJsonRaw = fs.readFileSync(elmJsonFileAbs, { encoding: "utf8" });
   const elmJson = JSON.parse(elmJsonRaw);
   assert.equal(
@@ -110,19 +121,82 @@ function expandDirs(paths) {
   return paths.flatMap((p) => {
     const stats = fs.statSync(p);
     if (stats.isDirectory()) {
-      return glob.sync(path.resolve(p, "**/*.elm"));
+      return glob.sync(path.resolve(p, "**", "*.elm"));
     } else {
-      return path.resolve(process.cwd(), p);
+      return path.resolve(p);
     }
   });
 }
 
+function collectIdentifiersFromDependencies(elmJsonFile) {
+  if (elmJsonFile) {
+    const dependencies = resolveDependencies(elmJsonFile);
+    const cacheFile = dependencyIdentifierCacheFile(elmJsonFile, dependencies);
+    return getIdentifiersAndEnsureCache(dependencies, cacheFile);
+  } else {
+    return [];
+  }
+}
+
+function dependencyIdentifierCacheFile(elmJsonFile, dependencies) {
+  const elmProjectDir = path.dirname(elmJsonFile);
+  const dependenciesHash = crypto
+    .createHash("md5")
+    .update(dependencies.toString())
+    .digest("hex");
+
+  return path.resolve(
+    elmProjectDir,
+    "elm-stuff",
+    "setem",
+    "cache",
+    `${dependenciesHash}.txt`
+  );
+}
+
 /**
- * Resolves and returns absolute paths of versioned dependency directories.
- * @param {string} elmJsonFile Path to elm.json file. Defaults to "./elm.json"
+ * Returns identifiers from dependencies, and save them to `cacheFile`.
+ * If `cacheFile` already exists, reads from it and do not re-generate.
+ * @param {string[]} dependencies Paths to dependency directories in ELM_HOME.
+ * @param {string} cacheFile A path of cache file which we save identifiers to.
  * @returns string[]
  */
-function resolveDependencies(elmJsonFile = ".elm/json") {
+function getIdentifiersAndEnsureCache(dependencies, cacheFile) {
+  if (fs.existsSync(cacheFile)) {
+    return fs
+      .readFileSync(cacheFile, { encoding: "utf8" })
+      .split("\n")
+      .filter((s) => s !== "");
+  } else {
+    const dependencyIdentifiers = dependencies.reduce(
+      reducePerDependency,
+      new Set()
+    );
+    const sortedIdentifiers = [...dependencyIdentifiers].sort();
+    fs.mkdirSync(path.dirname(cacheFile), { recursive: true });
+    fs.writeFileSync(cacheFile, sortedIdentifiers.join("\n"));
+    return sortedIdentifiers;
+  }
+}
+
+function reducePerDependency(identifierSet, dependencyDir) {
+  const dependencySourcePattern = path.resolve(
+    dependencyDir,
+    "src",
+    "**",
+    "*.elm"
+  );
+  return glob
+    .sync(dependencySourcePattern)
+    .reduce(reducePerFile, identifierSet);
+}
+
+/**
+ * Resolves and returns absolute paths of versioned dependency directories.
+ * @param {string} elmJsonFile Path to elm.json file.
+ * @returns string[]
+ */
+function resolveDependencies(elmJsonFile) {
   const elmJson = getElmJson(elmJsonFile);
   const elmVersion = elmJson["elm-version"];
   const elmHome =
