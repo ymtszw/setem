@@ -1,3 +1,5 @@
+// NOTE: This test requires Elm dependencies to be fetched beforehand. See `postinstall` in package.json
+
 const {
   generate,
   resolvePaths,
