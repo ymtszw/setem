@@ -41,6 +41,6 @@
     "postinstall": "cd src/fixtures/elm-spa-example/ && ../../../node_modules/.bin/elm make src/Main.elm --output elm.js",
     "setem": "src/setem.js",
     "test": "jest",
-    "test:cli": "src/setem.js --elm-json src/fixtures/elm-spa-example/elm.json && diff RecordSetter.elm src/fixtures/elm-spa-example-cli-result"
+    "test:cli": "src/setem.test.sh"
   }
 }
