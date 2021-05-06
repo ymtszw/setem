@@ -42,9 +42,10 @@ Defaults to ./elm.json`
 function mainAction(args, options) {
   const module = options.module || "RecordSetter";
   const prefix = options.prefix || "s_";
-  const paths = resolvePaths(args, options.elmJson || "./elm.json");
+  const elmJsonFile = options.elmJson; // Can be undefined; see resolvePaths() and other functions for default behavior
+  const paths = resolvePaths(args, elmJsonFile);
   if (options.verbose) for (const path of paths) fileLoaded(path);
-  const generated = generate(paths, module, prefix);
+  const generated = generate(paths, module, prefix, elmJsonFile);
 
   if (options.stdout) {
     console.log(generated);

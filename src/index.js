@@ -28,8 +28,7 @@ function generate(
   elmJsonFile = null
 ) {
   const uniqIdentifiers = [filepaths].flat().reduce(reducePerFile, new Set());
-  const dependencyIdentifiers = [];
-  // const dependencyIdentifiers = collectIdentifiersFromDependencies(elmJsonFile);
+  const dependencyIdentifiers = collectIdentifiersFromDependencies(elmJsonFile);
   const sortedUniqIdentifiers = [
     ...new Set([...uniqIdentifiers, ...dependencyIdentifiers]),
   ].sort();
