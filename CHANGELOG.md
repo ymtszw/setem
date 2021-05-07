@@ -4,6 +4,10 @@
 
 * ...
 
+## 0.3.3
+
+* Exclude generated file itself from source paths, was causing no-longer-existing record fields to linger
+
 ## 0.3.2
 
 * Skip non-existing paths in expansion, was causing runtime error when `tests/` missing in the project
