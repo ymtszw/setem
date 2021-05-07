@@ -44,7 +44,16 @@ function mainAction(args, options) {
   const prefix = options.prefix || "s_";
   const elmJsonFile = options.elmJson || "./elm.json";
   const hasExplicitPaths = args.length !== 0;
-  const paths = resolvePaths(args, elmJsonFile);
+  const moduleFilename = path.join(...module.split(".")) + ".elm";
+  const outputPath = path.resolve(
+    options.src || options.output || process.cwd(),
+    moduleFilename
+  );
+  // Do not include generated file itself, so that no-longer-existing record fields are propertly removed from the result!
+  const paths = resolvePaths(args, elmJsonFile).filter(
+    (path) => path !== outputPath
+  );
+
   if (options.verbose) for (const path of paths) fileLoaded(path);
   const generated = generate(
     paths,
@@ -57,18 +66,13 @@ function mainAction(args, options) {
   if (options.stdout) {
     console.log(generated);
   } else {
-    const srcFilename = path.join(...module.split(".")) + ".elm";
-    const filename = path.resolve(
-      options.src || options.output || process.cwd(),
-      srcFilename
-    );
-    const dir = path.dirname(filename);
+    const dir = path.dirname(outputPath);
     fs.mkdir(dir, { recursive: true }, (e, path) => {
       if (e) throw e;
       if (path) fileGenerated(path);
-      fs.writeFile(filename, generated, (e) => {
+      fs.writeFile(outputPath, generated, (e) => {
         if (e) throw e;
-        fileGenerated(filename);
+        fileGenerated(outputPath);
       });
     });
   }
