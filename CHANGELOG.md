@@ -16,7 +16,7 @@
 
 * Fix error in npm script
 
-## 0.3.0
+## 0.3.0 (Deprecated)
 
 * Support generation for an Elm project, including dependencies!
 
