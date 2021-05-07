@@ -19,16 +19,21 @@ module.exports = {
  * @param {string} moduleName Module name to render. Defaults to "RecordSetter"
  * @param {string} prefix Function prefix. Defaults to "s_"
  * @param {string} elmJsonFile Path to elm.json file. If not given, it does not generate setters from dependencies
+ * @param {boolean} hasExplicitPaths If `true`, it does not generate setters from dependencies. (For backward compatibility)
  * @returns string
  */
 function generate(
-  filepaths = [],
+  filepaths,
   moduleName = "RecordSetter",
   prefix = "s_",
-  elmJsonFile = null
+  elmJsonFile = null,
+  hasExplicitPaths
 ) {
   const uniqIdentifiers = [filepaths].flat().reduce(reducePerFile, new Set());
-  const dependencyIdentifiers = collectIdentifiersFromDependencies(elmJsonFile);
+  const dependencyIdentifiers = collectIdentifiersFromDependencies(
+    elmJsonFile,
+    hasExplicitPaths
+  );
   const sortedUniqIdentifiers = [
     ...new Set([...uniqIdentifiers, ...dependencyIdentifiers]),
   ].sort();
@@ -128,8 +133,8 @@ function expandDirs(paths) {
   });
 }
 
-function collectIdentifiersFromDependencies(elmJsonFile) {
-  if (elmJsonFile) {
+function collectIdentifiersFromDependencies(elmJsonFile, hasExplicitPaths) {
+  if (!hasExplicitPaths && elmJsonFile) {
     const dependencies = resolveDependencies(elmJsonFile);
     const cacheFile = dependencyIdentifierCacheFile(elmJsonFile, dependencies);
     return getIdentifiersAndEnsureCache(dependencies, cacheFile);
