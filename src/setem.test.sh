@@ -43,6 +43,14 @@ set -euo pipefail
   src/setem.js --output src/ src/fixtures/*.elm
   diff -u src/RecordSetter.elm src/fixtures/minimal-cli-result && rm src/RecordSetter.elm
 
+# Should NOT include generated file itself (must be idempotent)
+  src/setem.js --verbose --output src/fixtures/ src/fixtures/*.elm > invocation-log.first
+  diff -u src/fixtures/RecordSetter.elm src/fixtures/minimal-cli-result
+  src/setem.js --verbose --output src/fixtures/ src/fixtures/*.elm > invocation-log.second
+  diff -u src/fixtures/RecordSetter.elm src/fixtures/minimal-cli-result
+  diff -u invocation-log.first invocation-log.second
+  rm src/fixtures/RecordSetter.elm invocation-log.*
+
 
 # Should fail if elm.json is missing without option
   if src/setem.js 1> /dev/null 2> /dev/null; then
