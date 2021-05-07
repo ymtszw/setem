@@ -4,6 +4,14 @@
 
 * ...
 
+## 0.3.2
+
+* Skip non-existing paths in expansion, was causing runtime error when `tests/` missing in the project
+
+## 0.3.1
+
+* Fix error in npm script
+
 ## 0.3.0
 
 * Support generation for an Elm project, including dependencies!
