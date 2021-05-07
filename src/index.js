@@ -118,8 +118,9 @@ function getElmJson(elmJsonFile) {
 
 function expandDirs(paths) {
   return paths.flatMap((p) => {
-    const stats = fs.statSync(p);
-    if (stats.isDirectory()) {
+    if (!fs.existsSync(p)) {
+      return [];
+    } else if (fs.statSync(p).isDirectory()) {
       return glob.sync(path.resolve(p, "**", "*.elm"));
     } else {
       return path.resolve(p);
