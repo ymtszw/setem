@@ -19,7 +19,7 @@ set -euo pipefail
 #
 
 
-# Should generate from explicit source file
+# Should generate from a single source file
   src/setem.js src/fixtures/RecordDefAndExpr.elm
   diff -u RecordSetter.elm src/fixtures/minimal-cli-result && rm RecordSetter.elm
 
@@ -42,6 +42,7 @@ set -euo pipefail
 # Should generate to directory
   src/setem.js --output src/ src/fixtures/*.elm
   diff -u src/RecordSetter.elm src/fixtures/minimal-cli-result && rm src/RecordSetter.elm
+
 
 # Should NOT include generated file itself (must be idempotent)
   src/setem.js --verbose --output src/fixtures/ src/fixtures/*.elm > invocation-log.first
