@@ -18,6 +18,9 @@ set -euo pipefail
 # then compare their result with fixtures using `diff`!
 #
 
+# Cleanup leftovers
+  rm -f timestamp.* RecordSetter.elm src/RecordSetter.elm src/fixtures/RecordSetter.elm
+
 
 # Should generate from a single source file
   src/setem.js src/fixtures/RecordDefAndExpr.elm
@@ -44,13 +47,30 @@ set -euo pipefail
   diff -u src/RecordSetter.elm src/fixtures/minimal-cli-result && rm src/RecordSetter.elm
 
 
+# Should not regenerate if the content is not changed
+  src/setem.js --output src/fixtures/ src/fixtures/*.elm | grep "[*] created"
+  diff -u src/fixtures/RecordSetter.elm src/fixtures/minimal-cli-result
+  stat --format="%Y" src/fixtures/RecordSetter.elm > timestamp.first
+  src/setem.js --output src/fixtures/ src/fixtures/*.elm | grep "." && exit 1 || true
+  diff -u src/fixtures/RecordSetter.elm src/fixtures/minimal-cli-result
+  stat --format="%Y" src/fixtures/RecordSetter.elm > timestamp.second
+  diff -u timestamp.first timestamp.second
+  rm src/fixtures/RecordSetter.elm timestamp.*
+
+
+# Should update the file if the output is changed
+  src/setem.js --output src/fixtures/ src/fixtures/*.elm | grep "[*] created"
+  diff -u src/fixtures/RecordSetter.elm src/fixtures/minimal-cli-result
+  src/setem.js --output src/fixtures/ src/fixtures/**/*.elm | grep "[*] updated"
+  rm src/fixtures/RecordSetter.elm
+
+
 # Should NOT include generated file itself (must be idempotent)
-  src/setem.js --verbose --output src/fixtures/ src/fixtures/*.elm > invocation-log.first
+  src/setem.js --verbose --output src/fixtures/ src/fixtures/*.elm | grep "[*] created"
   diff -u src/fixtures/RecordSetter.elm src/fixtures/minimal-cli-result
-  src/setem.js --verbose --output src/fixtures/ src/fixtures/*.elm > invocation-log.second
+  src/setem.js --verbose --output src/fixtures/ src/fixtures/*.elm | grep -v "RecordSetter.elm"
   diff -u src/fixtures/RecordSetter.elm src/fixtures/minimal-cli-result
-  diff -u invocation-log.first invocation-log.second
-  rm src/fixtures/RecordSetter.elm invocation-log.*
+  rm src/fixtures/RecordSetter.elm
 
 
 # Should fail if elm.json is missing without option
