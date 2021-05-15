@@ -4,6 +4,11 @@
 
 * ...
 
+## 0.3.4
+
+* Do not write a file if generated output is not changed
+* Print as "updated" on file update
+
 ## 0.3.3
 
 * Exclude generated file itself from source paths, was causing no-longer-existing record fields to linger
