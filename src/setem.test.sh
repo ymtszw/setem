@@ -51,7 +51,7 @@ set -euo pipefail
   src/setem.js --output src/fixtures/ src/fixtures/*.elm | grep "[*] created"
   diff -u src/fixtures/RecordSetter.elm src/fixtures/minimal-cli-result
   stat --format="%Y" src/fixtures/RecordSetter.elm > timestamp.first
-  src/setem.js --output src/fixtures/ src/fixtures/*.elm | grep "." && exit 1 || true
+  src/setem.js --output src/fixtures/ src/fixtures/*.elm | diff -q /dev/null -
   diff -u src/fixtures/RecordSetter.elm src/fixtures/minimal-cli-result
   stat --format="%Y" src/fixtures/RecordSetter.elm > timestamp.second
   diff -u timestamp.first timestamp.second
