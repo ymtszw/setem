@@ -70,9 +70,25 @@ function mainAction(args, options) {
     fs.mkdir(dir, { recursive: true }, (e, path) => {
       if (e) throw e;
       if (path) fileGenerated(path);
-      fs.writeFile(outputPath, generated, (e) => {
-        if (e) throw e;
-        fileGenerated(outputPath);
+      fs.readFile(outputPath, { encoding: "utf8" }, (e, current) => {
+        if (e) {
+          if (e.code === "ENOENT") {
+            // Generate anew
+            fs.writeFile(outputPath, generated, (e) => {
+              if (e) throw e;
+              fileGenerated(outputPath);
+            });
+          } else {
+            throw e;
+          }
+        } else if (generated === current) {
+          // Skip
+        } else {
+          fs.writeFile(outputPath, generated, (e) => {
+            if (e) throw e;
+            fileUpdated(outputPath);
+          });
+        }
       });
     });
   }
@@ -84,6 +100,10 @@ function fileLoaded(path) {
 
 function fileGenerated(path) {
   console.log(chalk.green("* created: ") + path);
+}
+
+function fileUpdated(path) {
+  console.log(chalk.yellow("* updated: ") + path);
 }
 
 program.parse(process.argv);
