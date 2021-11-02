@@ -1,5 +1,5 @@
 const Parser = require("tree-sitter");
-const Elm = require("tree-sitter-elm");
+const Elm = require("@elm-tooling/tree-sitter-elm");
 const fs = require("fs");
 const path = require("path");
 const glob = require("glob");
