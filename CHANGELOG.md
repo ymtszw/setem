@@ -4,6 +4,11 @@
 
 * ...
 
+## 0.3.5
+
+* Update deps to support ARM64 environments notably Apple Silicon macOS
+  * Also adjust version specifier to accept wider range of dependencies
+
 ## 0.3.4
 
 * Do not write a file if generated output is not changed
