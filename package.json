@@ -25,17 +25,17 @@
   "author": "Yu Matsuzawa <ymtszw@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "@elm-tooling/tree-sitter-elm": "^5.3",
-    "chalk": "^4.1",
-    "commander": "^8.3",
-    "glob": "^7.1",
-    "tree-sitter": "^0.20"
+    "@elm-tooling/tree-sitter-elm": "~5.3",
+    "chalk": "~4.1",
+    "commander": "~8.3",
+    "glob": "~7",
+    "tree-sitter": "~0.20"
   },
   "devDependencies": {
-    "@types/jest": "^27",
-    "elm": "^0.19.1-5",
-    "jest": "^27",
-    "readme-md-generator": "^1.0"
+    "@types/jest": "~27",
+    "elm": ">=0.19.1-5",
+    "jest": "~27",
+    "readme-md-generator": ">=1.0.0"
   },
   "scripts": {
     "pretest": "cd src/fixtures/elm-spa-example/ && ../../../node_modules/.bin/elm make src/Main.elm --output elm.js",
