@@ -47,13 +47,14 @@ set -euo pipefail
   diff -u src/RecordSetter.elm src/fixtures/minimal-cli-result && rm src/RecordSetter.elm
 
 
+STAT=$(if which gstat > /dev/null; then echo "gstat"; else echo "stat"; fi)
 # Should not regenerate if the content is not changed
   src/setem.js --output src/fixtures/ src/fixtures/*.elm | grep "[*] created"
   diff -u src/fixtures/RecordSetter.elm src/fixtures/minimal-cli-result
-  stat --format="%Y" src/fixtures/RecordSetter.elm > timestamp.first
+  $STAT --format="%Y" src/fixtures/RecordSetter.elm > timestamp.first
   src/setem.js --output src/fixtures/ src/fixtures/*.elm | diff -q /dev/null -
   diff -u src/fixtures/RecordSetter.elm src/fixtures/minimal-cli-result
-  stat --format="%Y" src/fixtures/RecordSetter.elm > timestamp.second
+  $STAT --format="%Y" src/fixtures/RecordSetter.elm > timestamp.second
   diff -u timestamp.first timestamp.second
   rm src/fixtures/RecordSetter.elm timestamp.*
 
