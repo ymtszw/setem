@@ -193,6 +193,22 @@ If you do not give explicit `paths` as command line arguments, `setem` reads you
 and generates setters not only from your `"source-directories"` but from your dependencies as well.
 In this scenario, tokens from your dependencies are cached in your `elm-stuff/setem/` directory.
 
+## Development
+
+Install reasonably new node. If you are using `asdf`,
+
+```
+git clone git@github.com:ymtszw/setem.git
+cd setem/
+git submodule update --init --recursive
+asdf install
+yarn
+yarn test
+yarn test:cli
+```
+
+In GitHub Actions, sanity checks are performed against recent LTS node versions (12,14,16)
+
 ## Author & License
 
 MIT License (c) **Yu Matsuzawa**
