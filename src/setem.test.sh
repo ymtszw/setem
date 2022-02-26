@@ -66,6 +66,12 @@ STAT=$(if which gstat > /dev/null; then echo "gstat"; else echo "stat"; fi)
   rm src/fixtures/RecordSetter.elm
 
 
+# Should allow blank string for prefix option
+  src/setem.js --prefix '' --output src/fixtures/ src/fixtures/*.elm | grep "[*] created"
+  diff -u src/fixtures/RecordSetter.elm src/fixtures/blank-prefix-result
+  rm src/fixtures/RecordSetter.elm
+
+
 # Should NOT include generated file itself (must be idempotent)
   src/setem.js --verbose --output src/fixtures/ src/fixtures/*.elm | grep "[*] created"
   diff -u src/fixtures/RecordSetter.elm src/fixtures/minimal-cli-result
