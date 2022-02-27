@@ -25,9 +25,9 @@
   "author": "Yu Matsuzawa <ymtszw@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "@elm-tooling/tree-sitter-elm": "~5.3",
-    "chalk": "~4.1",
-    "commander": "~8.3",
+    "@elm-tooling/tree-sitter-elm": "^5.3",
+    "chalk": "^4.1",
+    "commander": "^8.3",
     "glob": "~7",
     "tree-sitter": "~0.20"
   },
