@@ -41,7 +41,7 @@ Defaults to ./elm.json`
 
 function mainAction(args, options) {
   const module = options.module || "RecordSetter";
-  const prefix = options.prefix || "s_";
+  const prefix = options.prefix === undefined ? "s_" : options.prefix;
   const elmJsonFile = options.elmJson || "./elm.json";
   const hasExplicitPaths = args.length !== 0;
   const moduleFilename = path.join(...module.split(".")) + ".elm";
