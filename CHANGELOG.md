@@ -4,6 +4,10 @@
 
 * ...
 
+## 0.3.6
+
+* Fix `--prefix` option with test. Thanks again [@choonkeat](https://github.com/)!
+
 ## 0.3.5
 
 * Update deps to support ARM64 environments notably Apple Silicon macOS
