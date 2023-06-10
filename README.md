@@ -214,7 +214,7 @@ npm run test
 npm run test:cli
 ```
 
-In GitHub Actions, sanity checks are performed against recent LTS Node.js versions (12,14,16)
+In GitHub Actions, [sanity checks](https://github.com/ymtszw/setem/actions/workflows/sanity_check.yml) are performed against recent LTS Node.js versions (14,16,18)
 
 ## Author & License
 
