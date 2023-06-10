@@ -33,12 +33,12 @@ jobs:
         with:
           path: |
             node_modules
-          key: v3-setem-${{ matrix.node-version }}-${{ hashFiles('yarn.lock') }}-${{ github.sha }}
+          key: v3-setem-${{ matrix.node-version }}-${{ hashFiles('package-lock.json') }}-${{ github.sha }}
           restore-keys: |
-            v3-setem-${{ matrix.node-version }}-${{ hashFiles('yarn.lock') }}-
+            v3-setem-${{ matrix.node-version }}-${{ hashFiles('package-lock.json') }}-
       - uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
-      - run: yarn
-      - run: yarn test
-      - run: yarn test:cli
+      - run: npm ci
+      - run: npm run test
+      - run: npm run test:cli
