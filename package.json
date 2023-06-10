@@ -32,9 +32,9 @@
     "tree-sitter": "~0.20"
   },
   "devDependencies": {
-    "@types/jest": "~27",
+    "@types/jest": "~29",
     "elm": ">=0.19.1-5",
-    "jest": "~27"
+    "jest": "~29"
   },
   "scripts": {
     "pretest": "cd src/fixtures/elm-spa-example/ && ../../../node_modules/.bin/elm make src/Main.elm --output elm.js",
