@@ -16,27 +16,28 @@ defaults:
 
 jobs:
   run-checks: # <== This name is referenced as a merge requirement for master branch
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-22.04
     strategy:
+      fail-fast: false
       matrix:
         node-version:
-          - 12
           - 14
           - 16
+          - 18
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           submodules: true
-      - uses: actions/cache@v2
+      - uses: actions/cache@v3
         with:
           path: |
             node_modules
-          key: v1-setem-${{ hashFiles('yarn.lock') }}-${{ github.sha }}
+          key: v3-setem-${{ matrix.node-version }}-${{ hashFiles('package-lock.json') }}-${{ github.sha }}
           restore-keys: |
-            v1-setem-${{ hashFiles('yarn.lock') }}-
-      - uses: actions/setup-node@v2
+            v3-setem-${{ matrix.node-version }}-${{ hashFiles('package-lock.json') }}-
+      - uses: actions/setup-node@v3
         with:
-          node-version: ${{ matrix.node }}
-      - run: yarn
-      - run: yarn test
-      - run: yarn test:cli
+          node-version: ${{ matrix.node-version }}
+      - run: npm ci
+      - run: npm run test
+      - run: npm run test:cli

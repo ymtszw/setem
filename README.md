@@ -1,7 +1,8 @@
 # 🔸 setem 🔸
+
 [![sanity_check](https://github.com/ymtszw/setem/actions/workflows/sanity_check.yml/badge.svg)](https://github.com/ymtszw/setem/actions/workflows/sanity_check.yml)
 [![npm](https://img.shields.io/npm/v/setem)](https://www.npmjs.com/package/setem)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](#)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Twitter: gada\_twt](https://img.shields.io/twitter/follow/gada\_twt.svg?style=social)](https://twitter.com/gada\_twt)
 
 > Set'em: Elm record setter generator
@@ -15,27 +16,27 @@
 ## Prerequisites
 
 - Reasonably new `nodejs`
-- (Preferably `yarn`)
 
 ## Install
 
 ```sh
-yarn add --dev setem
-(npm install --save-dev setem)
+npm install --save-dev setem
+# OR
+# yarn add --dev setem
 ```
 
 ## Usage
 
 ```sh
 # Generates for an Elm project (including dependencies)
-yarn setem --output src/                                 # For Elm project cwd. "elm.json" file must exist
-yarn setem --output src/ --elm-json sub_project/elm.json # For non-cwd Elm project, targeted by "elm.json" file path
+npm run setem --output src/                                 # For Elm project cwd. "elm.json" file must exist
+npm run setem --output src/ --elm-json sub_project/elm.json # For non-cwd Elm project, targeted by "elm.json" file path
 
 # Only generates from specific files (NOT including dependencies)
-yarn setem --output src/ src/Main.elm                    # From a single source file
-yarn setem --output src/ src/Main.elm src/Data/User.elm  # From multiple source files
-yarn setem --output src/ src/**/*.elm                    # From multiple source files resolved by glob in your shell
-yarn setem --output src/ src/                            # From multiple source files in a specific directory, expanded recursively
+npm run setem --output src/ src/Main.elm                    # From a single source file
+npm run setem --output src/ src/Main.elm src/Data/User.elm  # From multiple source files
+npm run setem --output src/ src/**/*.elm                    # From multiple source files resolved by glob in your shell
+npm run setem --output src/ src/                            # From multiple source files in a specific directory, expanded recursively
 ```
 
 (`npx` or global install also work)
@@ -90,11 +91,14 @@ Standard record updating syntax is:
 
 ...which is,
 
-* Not pipeline-friendly. You have to combine it with anonymous function like:
+- Not pipeline-friendly. You have to combine it with anonymous function like:
+
   ```elm
   x |> doSomething |> (\v -> { record | name = v }) |> doElse
   ```
-* Not nest-friendly. You have to combine either `let in` or pattern matches:
+
+- Not nest-friendly. You have to combine either `let in` or pattern matches:
+
   ```elm
   let
       innerRecord =
@@ -110,21 +114,21 @@ Now, as discussed
 in the community, it is somewhat deliberate choice in the language design,
 to NOT provide "record setter/updater" syntax.
 
-* It encourages to create nicely named top-level functions rather than relying on verbose anonymous functions.
-* Also it encourages to design flatter, simpler data structures (and possibly using custom types) to more precisely illustrate our requirements.
-* For unavoidable situations where setters are in strong demand, we can create "data" module with necessary setters exposed, which actually leads us to think about proper boundary of data and concerns. Never a bad thing!
+- It encourages to create nicely named top-level functions rather than relying on verbose anonymous functions.
+- Also it encourages to design flatter, simpler data structures (and possibly using custom types) to more precisely illustrate our requirements.
+- For unavoidable situations where setters are in strong demand, we can create "data" module with necessary setters exposed, which actually leads us to think about proper boundary of data and concerns. Never a bad thing!
 
 But. A big BUT.
 
 In our everyday programming we yearn for setters time to time.
 
-* When we work with foreign record data structures from, say, packages
-* When we have tons of records to work with, from code generation facilities such as [elm-graphql]
-* When it is more natural to work with nested records as-is.
+- When we work with foreign record data structures from, say, packages
+- When we have tons of records to work with, from code generation facilities such as [elm-graphql]
+- When it is more natural to work with nested records as-is.
   For example when we use external/existing JSON APIs.
-* **Simply when we do not have much time**.
-  * Requirement of writing many setters in order to leverage composition-centric logics, is tedious.
-  * It is a discouragement for us before writing proper data modules, when we forsee many boilerplate works. Even if it is one time thing.
+- **Simply when we do not have much time**.
+  - Requirement of writing many setters in order to leverage composition-centric logics, is tedious.
+  - It is a discouragement for us before writing proper data modules, when we forsee many boilerplate works. Even if it is one time thing.
 
 [elm-graphql]: https://gihtub.com/dillonkearns/elm-graphql
 
@@ -134,20 +138,23 @@ For that, `setem` is born.
 
 As the slogan says, "setters just set!"
 
-* `setem` just generates setters, and setters only
-  * It is up to you how you utilize those setters.
+- `setem` just generates setters, and setters only
+  - It is up to you how you utilize those setters.
     For instance, use `setem`-generated setters as building blocks for [Monocle][elm-monocle] definitions!
-* It does not provide "updaters" in the sense of `(a -> a) -> { b | name : a } -> { b | name : a }`
-  * It might prove useful, though my current intuition says it sees less usages than setters.
-* A single importable module. Just `import RecordSetter exposing(..)` in your code and that's it! All setters are always available.
+- It does not provide "updaters" in the sense of `(a -> a) -> { b | name : a } -> { b | name : a }`
+  - It might prove useful, though my current intuition says it sees less usages than setters.
+- A single importable module. Just `import RecordSetter exposing(..)` in your code and that's it! All setters are always available.
 
 With generated setters it is possible to:
 
-* Pipeline-d set:
-  ```
+- Pipeline-d set:
+
+  ```elm
   x |> doSomething |> s_name v |> s_anotherField (updater x.anotherField) |> doElse
   ```
-* Nested set:
+
+- Nested set:
+
   ```elm
   { record
       | inner =
@@ -179,7 +186,7 @@ src/RecordSetter.elm linguist-generated=true
 ```
 
 Paths set as `linguist-generated=true` are collapsed by default on GitHub pull request diffs, reducing visual clutter.
-See https://github.com/github/linguist/blob/master/docs/overrides.md#generated-code
+See <https://github.com/github/linguist/blob/master/docs/overrides.md#generated-code>
 
 ## Implementation note
 
@@ -195,31 +202,30 @@ In this scenario, tokens from your dependencies are cached in your `elm-stuff/se
 
 ## Development
 
-Install reasonably new node. If you are using `asdf`,
+Install reasonably new Node.js. If you are using `asdf`,
 
-```
+```sh
 git clone git@github.com:ymtszw/setem.git
 cd setem/
 git submodule update --init --recursive
 asdf install
-yarn
-yarn test
-yarn test:cli
+npm ci
+npm run test
+npm run test:cli
 ```
 
-In GitHub Actions, sanity checks are performed against recent LTS node versions (12,14,16)
+In GitHub Actions, [sanity checks](https://github.com/ymtszw/setem/actions/workflows/sanity_check.yml) are performed against recent LTS Node.js versions (14,16,18)
 
 ## Author & License
 
 MIT License (c) **Yu Matsuzawa**
 
-* Twitter: [@gada\_twt](https://twitter.com/gada\_twt)
-* Github: [@ymtszw](https://github.com/ymtszw)
+- Twitter: [@gada\_twt](https://twitter.com/gada\_twt)
+- Github: [@ymtszw](https://github.com/ymtszw)
 
 ## Show your support
 
 Give a ⭐️ if this project helped you!
 
-
 ***
-_This README was generated with ❤️ by [readme-md-generator](https://github.com/kefranabg/readme-md-generator)_
+*This README was generated with ❤️ by [readme-md-generator](https://github.com/kefranabg/readme-md-generator)*

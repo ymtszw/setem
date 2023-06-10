@@ -4,6 +4,11 @@
 
 * ...
 
+## 0.4.0
+
+* Support Node.js 18
+* [**BREAKING**] Drop support for Node.js 12
+
 ## 0.3.6
 
 * Fix `--prefix` option with test. Thanks again [@choonkeat](https://github.com/)!
