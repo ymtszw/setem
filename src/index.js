@@ -126,7 +126,7 @@ function expandDirs(paths) {
     if (!fs.existsSync(p)) {
       return [];
     } else if (fs.statSync(p).isDirectory()) {
-      return glob.sync(path.resolve(p, "**", "*.elm"));
+      return glob.sync(path.resolve(p, "**", "*.elm")).sort(); // Since node-glob 9.0, glob.sync() does not guarantee the order of results.
     } else {
       return path.resolve(p);
     }
