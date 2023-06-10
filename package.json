@@ -26,7 +26,7 @@
   "license": "MIT",
   "dependencies": {
     "@elm-tooling/tree-sitter-elm": "5.3 - 5.6.2",
-    "chalk": "~4",
+    "chalk": "^4.1",
     "commander": "~10",
     "glob": "~10",
     "tree-sitter": "~0.20"
