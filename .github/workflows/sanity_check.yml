@@ -33,9 +33,9 @@ jobs:
         with:
           path: |
             node_modules
-          key: v2-setem-${{ hashFiles('package-lock.json') }}-${{ github.sha }}
+          key: v3-setem-${{ matrix.node-version }}-${{ hashFiles('package-lock.json') }}-${{ github.sha }}
           restore-keys: |
-            v2-setem-${{ hashFiles('package-lock.json') }}-
+            v3-setem-${{ matrix.node-version }}-${{ hashFiles('package-lock.json') }}-
       - uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
