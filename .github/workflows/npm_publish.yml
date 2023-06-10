@@ -1,3 +1,5 @@
+name: npm_publish
+
 on:
   push:
     branches: master
