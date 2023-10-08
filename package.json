@@ -37,7 +37,6 @@
     "jest": "~29"
   },
   "scripts": {
-    "pretest": "cd src/fixtures/elm-spa-example/ && ../../../node_modules/.bin/elm make src/Main.elm --output elm.js",
     "setem": "src/setem.js",
     "test": "jest",
     "test:cli": "src/setem.test.sh"

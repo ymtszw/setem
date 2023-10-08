@@ -136,11 +136,44 @@ function expandDirs(paths) {
 function collectIdentifiersFromDependencies(elmJsonFile, hasExplicitPaths) {
   if (!hasExplicitPaths && elmJsonFile) {
     const dependencies = resolveDependencies(elmJsonFile);
+    const dependenciesDownloaded = ensureDependenciesDownloaded(
+      elmJsonFile,
+      dependencies
+    );
     const cacheFile = dependencyIdentifierCacheFile(elmJsonFile, dependencies);
-    return getIdentifiersAndEnsureCache(dependencies, cacheFile);
+    return getIdentifiersAndEnsureCache(
+      dependencies,
+      cacheFile,
+      dependenciesDownloaded
+    );
   } else {
     return [];
   }
+}
+
+/**
+ * Ensure all dependencies are downloaded. If not, download the dependencies by compiling a dummy app.
+ * @param {string} elmJsonFile Path to elm.json file
+ * @param {string[]} dependencies Paths to dependency directories
+ * @returns boolean flag indicating whether dependencies are just downloaded or not
+ */
+function ensureDependenciesDownloaded(elmJsonFile, dependencies) {
+  if (dependencies.some((dep) => !fs.existsSync(dep))) {
+    console.log(
+      "Some dependencies are not downloaded yet. Downloading with dummy app..."
+    );
+    downloadDependenciesUsingDummyElmApp(elmJsonFile);
+    return true;
+  } else {
+    console.log("All dependencies are downloaded.");
+    return false;
+  }
+}
+
+function downloadDependenciesUsingDummyElmApp(elmJsonFile) {
+  const elmJsonFileAbs = path.resolve(elmJsonFile);
+  console.warn(elmJsonFileAbs);
+  assert.fail("TODO Not implemented yet!");
 }
 
 function dependencyIdentifierCacheFile(elmJsonFile, dependencies) {
@@ -164,10 +197,15 @@ function dependencyIdentifierCacheFile(elmJsonFile, dependencies) {
  * If `cacheFile` already exists, reads from it and do not re-generate.
  * @param {string[]} dependencies Paths to dependency directories in ELM_HOME.
  * @param {string} cacheFile A path of cache file which we save identifiers to.
+ * @param {boolean} dependenciesDownloaded Whether dependencies are just downloaded or not. If true, it ignores cache..
  * @returns string[]
  */
-function getIdentifiersAndEnsureCache(dependencies, cacheFile) {
-  if (fs.existsSync(cacheFile)) {
+function getIdentifiersAndEnsureCache(
+  dependencies,
+  cacheFile,
+  dependenciesDownloaded
+) {
+  if (!dependenciesDownloaded && fs.existsSync(cacheFile)) {
     return fs
       .readFileSync(cacheFile, { encoding: "utf8" })
       .split("\n")
