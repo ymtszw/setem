@@ -5,6 +5,7 @@ const path = require("path");
 const glob = require("glob");
 const assert = require("assert").strict;
 const crypto = require("crypto");
+const child_process = require("node:child_process");
 
 module.exports = {
   generate,
@@ -160,20 +161,74 @@ function collectIdentifiersFromDependencies(elmJsonFile, hasExplicitPaths) {
 function ensureDependenciesDownloaded(elmJsonFile, dependencies) {
   if (dependencies.some((dep) => !fs.existsSync(dep))) {
     console.log(
-      "Some dependencies are not downloaded yet. Downloading with dummy app..."
+      "[setem] Some dependencies are not downloaded yet. Downloading with dummy app..."
     );
     downloadDependenciesUsingDummyElmApp(elmJsonFile);
     return true;
   } else {
-    console.log("All dependencies are downloaded.");
     return false;
   }
 }
 
 function downloadDependenciesUsingDummyElmApp(elmJsonFile) {
   const elmJsonFileAbs = path.resolve(elmJsonFile);
-  console.warn(elmJsonFileAbs);
-  assert.fail("TODO Not implemented yet!");
+  const elmJson = JSON.parse(
+    fs.readFileSync(elmJsonFileAbs, { encoding: "utf8" })
+  );
+  elmJson["source-directories"] = ["dummySrc"];
+
+  // Make all dependencies as direct, so that it can be downloaded at once;
+  elmJson["dependencies"].direct = {
+    ...elmJson["dependencies"].direct,
+    ...elmJson["dependencies"].indirect,
+    ...elmJson["test-dependencies"].direct,
+    ...elmJson["test-dependencies"].indirect,
+  };
+  elmJson["dependencies"].indirect = {};
+  elmJson["test-dependencies"].direct = {};
+  elmJson["test-dependencies"].indirect = {};
+
+  // Generate dummy app in elm-stuff/setem/dummy_app_<project name>/
+  const elmProjectDir = path.dirname(elmJsonFileAbs);
+  const dummyElmAppName = `dummy_app_${path.basename(elmProjectDir)}`;
+  const dummyElmAppDir = path.join(
+    elmProjectDir,
+    "elm-stuff",
+    "setem",
+    dummyElmAppName
+  );
+  const dummySrcDir = path.join(dummyElmAppDir, "dummySrc");
+  fs.mkdirSync(dummySrcDir, { recursive: true });
+  const dummyElmJsonFile = path.join(dummyElmAppDir, "elm.json");
+  fs.writeFileSync(dummyElmJsonFile, JSON.stringify(elmJson, null, 4));
+  const dummyMainFile = path.join(dummySrcDir, "SetemDummyMain.elm");
+  fs.writeFileSync(
+    dummyMainFile,
+    // Minimal compile-able app to download dependencies; all it needs are prelude modules
+    `
+module SetemDummyMain exposing (main)
+
+main : Program () () Never
+main =
+    Platform.worker
+        { init = \\_ -> ( (), Cmd.none )
+        , update = \\_ _ -> ( (), Cmd.none )
+        , subscriptions = \\_ -> Sub.none
+        }
+`
+  );
+
+  // Compile the dummy app
+  const customPath = pathWithPossibleNodeModulesBinDirs();
+  child_process.execFileSync(
+    "elm",
+    ["make", dummyMainFile, "--output=/dev/null"],
+    {
+      cwd: dummyElmAppDir,
+      stdio: "inherit",
+      env: { ...process.env, PATH: customPath },
+    }
+  );
 }
 
 function dependencyIdentifierCacheFile(elmJsonFile, dependencies) {
@@ -197,7 +252,7 @@ function dependencyIdentifierCacheFile(elmJsonFile, dependencies) {
  * If `cacheFile` already exists, reads from it and do not re-generate.
  * @param {string[]} dependencies Paths to dependency directories in ELM_HOME.
  * @param {string} cacheFile A path of cache file which we save identifiers to.
- * @param {boolean} dependenciesDownloaded Whether dependencies are just downloaded or not. If true, it ignores cache..
+ * @param {boolean} dependenciesDownloaded Whether dependencies are just downloaded or not. If true, it ignores cache.
  * @returns string[]
  */
 function getIdentifiersAndEnsureCache(
@@ -257,4 +312,17 @@ function fromDependencyObject(obj, packagesDir) {
   return Object.entries(obj).map(([authorAndPackage, version]) => {
     return path.resolve(packagesDir, authorAndPackage, version);
   });
+}
+
+function pathWithPossibleNodeModulesBinDirs() {
+  let cwdOrAncestors = process.cwd();
+  let ret = [];
+  while (cwdOrAncestors !== path.dirname(cwdOrAncestors)) {
+    ret.push(cwdOrAncestors);
+    cwdOrAncestors = path.dirname(cwdOrAncestors);
+  }
+  const nodeModulesBinPaths = ret
+    .map((cwdOrAncestor) => path.join(cwdOrAncestor, "node_modules", ".bin"))
+    .join(path.delimiter);
+  return [process.env.PATH, nodeModulesBinPaths].join(path.delimiter);
 }
