@@ -18,23 +18,25 @@ set -euo pipefail
 # then compare their result with fixtures using `diff`!
 #
 
+export GIT_PAGER=""
+
 # Cleanup leftovers
   rm -f timestamp.* RecordSetter.elm src/RecordSetter.elm src/fixtures/RecordSetter.elm
 
 
 # Should generate from a single source file
   src/setem.js src/fixtures/RecordDefAndExpr.elm
-  diff -u RecordSetter.elm src/fixtures/minimal-cli-result && rm RecordSetter.elm
+  git diff --no-index RecordSetter.elm src/fixtures/minimal-cli-result && rm RecordSetter.elm
 
 
 # Should generate from multiple source files
   src/setem.js src/fixtures/RecordDefAndExpr.elm src/fixtures/OnlyRecordDef.elm
-  diff -u RecordSetter.elm src/fixtures/minimal-cli-result && rm RecordSetter.elm
+  git diff --no-index RecordSetter.elm src/fixtures/minimal-cli-result && rm RecordSetter.elm
 
 
 # Should generate from multiple source files with glob
   src/setem.js src/fixtures/*.elm
-  diff -u RecordSetter.elm src/fixtures/minimal-cli-result && rm RecordSetter.elm
+  git diff --no-index RecordSetter.elm src/fixtures/minimal-cli-result && rm RecordSetter.elm
 
 
 # Should generate to stdout
@@ -44,39 +46,39 @@ set -euo pipefail
 
 # Should generate to directory
   src/setem.js --output src/ src/fixtures/*.elm
-  diff -u src/RecordSetter.elm src/fixtures/minimal-cli-result && rm src/RecordSetter.elm
+  git diff --no-index src/RecordSetter.elm src/fixtures/minimal-cli-result && rm src/RecordSetter.elm
 
 
 STAT=$(if which gstat > /dev/null; then echo "gstat"; else echo "stat"; fi)
 # Should not regenerate if the content is not changed
   src/setem.js --output src/fixtures/ src/fixtures/*.elm | grep "[*] created"
-  diff -u src/fixtures/RecordSetter.elm src/fixtures/minimal-cli-result
+  git diff --no-index src/fixtures/RecordSetter.elm src/fixtures/minimal-cli-result
   $STAT --format="%Y" src/fixtures/RecordSetter.elm > timestamp.first
   src/setem.js --output src/fixtures/ src/fixtures/*.elm | diff -q /dev/null -
-  diff -u src/fixtures/RecordSetter.elm src/fixtures/minimal-cli-result
+  git diff --no-index src/fixtures/RecordSetter.elm src/fixtures/minimal-cli-result
   $STAT --format="%Y" src/fixtures/RecordSetter.elm > timestamp.second
-  diff -u timestamp.first timestamp.second
+  git diff --no-index timestamp.first timestamp.second
   rm src/fixtures/RecordSetter.elm timestamp.*
 
 
 # Should update the file if the output is changed
   src/setem.js --output src/fixtures/ src/fixtures/*.elm | grep "[*] created"
-  diff -u src/fixtures/RecordSetter.elm src/fixtures/minimal-cli-result
+  git diff --no-index src/fixtures/RecordSetter.elm src/fixtures/minimal-cli-result
   src/setem.js --output src/fixtures/ src/fixtures/**/*.elm | grep "[*] updated"
   rm src/fixtures/RecordSetter.elm
 
 
 # Should allow blank string for prefix option
   src/setem.js --prefix '' --output src/fixtures/ src/fixtures/*.elm | grep "[*] created"
-  diff -u src/fixtures/RecordSetter.elm src/fixtures/blank-prefix-result
+  git diff --no-index src/fixtures/RecordSetter.elm src/fixtures/blank-prefix-result
   rm src/fixtures/RecordSetter.elm
 
 
 # Should NOT include generated file itself (must be idempotent)
   src/setem.js --verbose --output src/fixtures/ src/fixtures/*.elm | grep "[*] created"
-  diff -u src/fixtures/RecordSetter.elm src/fixtures/minimal-cli-result
+  git diff --no-index src/fixtures/RecordSetter.elm src/fixtures/minimal-cli-result
   src/setem.js --verbose --output src/fixtures/ src/fixtures/*.elm | grep -v "RecordSetter.elm"
-  diff -u src/fixtures/RecordSetter.elm src/fixtures/minimal-cli-result
+  git diff --no-index src/fixtures/RecordSetter.elm src/fixtures/minimal-cli-result
   rm src/fixtures/RecordSetter.elm
 
 
@@ -92,10 +94,10 @@ STAT=$(if which gstat > /dev/null; then echo "gstat"; else echo "stat"; fi)
 # Should generate from full project without option
   pushd src/fixtures/elm-spa-example
     ../../../src/setem.js
-    diff -u RecordSetter.elm ../elm-spa-example-cli-result && rm RecordSetter.elm
+    git diff --no-index RecordSetter.elm ../elm-spa-example-cli-result && rm RecordSetter.elm
   popd
 
 
 # Should generate from full project with --elm-json option
   src/setem.js --elm-json src/fixtures/elm-spa-example/elm.json
-  diff -u RecordSetter.elm src/fixtures/elm-spa-example-cli-result && rm RecordSetter.elm
+  git diff --no-index RecordSetter.elm src/fixtures/elm-spa-example-cli-result && rm RecordSetter.elm
