@@ -136,9 +136,14 @@ function expandDirs(paths) {
 
 function collectIdentifiersFromDependencies(elmJsonFile, hasExplicitPaths) {
   if (!hasExplicitPaths && elmJsonFile) {
-    const dependencies = resolveDependencies(elmJsonFile);
+    const elmHome =
+      (process.env.ELM_HOME && path.resolve(process.env.ELM_HOME)) ||
+      (process.env.HOME && path.resolve(process.env.HOME, ".elm")) ||
+      assert.fail("$HOME or $ELM_HOME must exist!"); // XXX Windows aren't supported
+    const dependencies = resolveDependencies(elmJsonFile, elmHome);
     const dependenciesDownloaded = ensureDependenciesDownloaded(
       elmJsonFile,
+      elmHome,
       dependencies
     );
     const cacheFile = dependencyIdentifierCacheFile(elmJsonFile, dependencies);
@@ -155,22 +160,25 @@ function collectIdentifiersFromDependencies(elmJsonFile, hasExplicitPaths) {
 /**
  * Ensure all dependencies are downloaded. If not, download the dependencies by compiling a dummy app.
  * @param {string} elmJsonFile Path to elm.json file
+ * @param {string} elmHome Absolute path to elm home directory
  * @param {string[]} dependencies Paths to dependency directories
  * @returns boolean flag indicating whether dependencies are just downloaded or not
  */
-function ensureDependenciesDownloaded(elmJsonFile, dependencies) {
+function ensureDependenciesDownloaded(elmJsonFile, elmHome, dependencies) {
+  assert.equal(path.isAbsolute(elmHome), true);
   if (dependencies.some((dep) => !fs.existsSync(dep))) {
     console.log(
       "[setem] Some dependencies are not downloaded yet. Downloading with dummy app..."
     );
-    downloadDependenciesUsingDummyElmApp(elmJsonFile);
+    downloadDependenciesUsingDummyElmApp(elmJsonFile, elmHome);
     return true;
   } else {
     return false;
   }
 }
 
-function downloadDependenciesUsingDummyElmApp(elmJsonFile) {
+function downloadDependenciesUsingDummyElmApp(elmJsonFile, elmHome) {
+  assert.equal(path.isAbsolute(elmHome), true);
   const elmJsonFileAbs = path.resolve(elmJsonFile);
   const elmJson = JSON.parse(
     fs.readFileSync(elmJsonFileAbs, { encoding: "utf8" })
@@ -202,32 +210,15 @@ function downloadDependenciesUsingDummyElmApp(elmJsonFile) {
   const dummyElmJsonFile = path.join(dummyElmAppDir, "elm.json");
   fs.writeFileSync(dummyElmJsonFile, JSON.stringify(elmJson, null, 4));
   const dummyMainFile = path.join(dummySrcDir, "SetemDummyMain.elm");
-  fs.writeFileSync(
-    dummyMainFile,
-    // Minimal compile-able app to download dependencies; all it needs are prelude modules
-    `
-module SetemDummyMain exposing (main)
-
-main : Program () () Never
-main =
-    Platform.worker
-        { init = \\_ -> ( (), Cmd.none )
-        , update = \\_ _ -> ( (), Cmd.none )
-        , subscriptions = \\_ -> Sub.none
-        }
-`
-  );
+  fs.writeFileSync(dummyMainFile, minimulCompileableApp);
 
   // Compile the dummy app
   const customPath = pathWithPossibleNodeModulesBinDirs();
+  const customEnv = { ...process.env, PATH: customPath, ELM_HOME: elmHome };
   child_process.execFileSync(
     "elm",
     ["make", dummyMainFile, "--output=/dev/null"],
-    {
-      cwd: dummyElmAppDir,
-      stdio: "inherit",
-      env: { ...process.env, PATH: customPath },
-    }
+    { cwd: dummyElmAppDir, stdio: "inherit", env: customEnv }
   );
 }
 
@@ -292,13 +283,13 @@ function reducePerDependency(identifierSet, dependencyDir) {
 /**
  * Resolves and returns absolute paths of versioned dependency directories.
  * @param {string} elmJsonFile Path to elm.json file.
+ * @param {string} elmHome Absolute path to elm home directory.
  * @returns string[]
  */
-function resolveDependencies(elmJsonFile) {
+function resolveDependencies(elmJsonFile, elmHome) {
+  assert.equal(path.isAbsolute(elmHome), true);
   const elmJson = getElmJson(elmJsonFile);
   const elmVersion = elmJson["elm-version"];
-  const elmHome =
-    process.env.ELM_HOME || path.resolve(process.env.HOME, ".elm"); // XXX Windows aren't supported
   const packagesDir = path.resolve(elmHome, elmVersion, "packages");
   return [
     ...fromDependencyObject(elmJson["dependencies"].direct, packagesDir),
@@ -326,3 +317,18 @@ function pathWithPossibleNodeModulesBinDirs() {
     .join(path.delimiter);
   return [process.env.PATH, nodeModulesBinPaths].join(path.delimiter);
 }
+
+/**
+ * All it needs are prelude modules
+ */
+const minimulCompileableApp = `
+module SetemDummyMain exposing (main)
+
+main : Program () () Never
+main =
+  Platform.worker
+    { init = \\_ -> ( (), Cmd.none )
+    , update = \\_ _ -> ( (), Cmd.none )
+    , subscriptions = \\_ -> Sub.none
+    }
+`;
