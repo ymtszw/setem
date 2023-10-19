@@ -101,3 +101,11 @@ STAT=$(if which gstat > /dev/null; then echo "gstat"; else echo "stat"; fi)
 # Should generate from full project with --elm-json option
   src/setem.js --elm-json src/fixtures/elm-spa-example/elm.json
   git diff --no-index RecordSetter.elm src/fixtures/elm-spa-example-cli-result && rm RecordSetter.elm
+
+# Should respect ELM_HOME on generation, with downloading all teh deps
+  ELM_HOME=$(realpath tmp/.elm/)
+  export ELM_HOME
+  rm -rf "$ELM_HOME"
+  mkdir -p "$ELM_HOME"
+  src/setem.js --elm-json src/fixtures/elm-spa-example/elm.json
+  git diff --no-index RecordSetter.elm src/fixtures/elm-spa-example-cli-result && rm RecordSetter.elm
