@@ -298,10 +298,11 @@ describe("resolvePaths()", () => {
 
 describe("resolveDependencies()", () => {
   const HOME = process.env.HOME;
+  const ELM_HOME = path.resolve(HOME, ".elm");
 
   test("should properly list all dependency source directories in elm.json", () => {
     expect(
-      resolveDependencies("src/fixtures/elm-spa-example/elm.json")
+      resolveDependencies("src/fixtures/elm-spa-example/elm.json", ELM_HOME)
     ).toEqual([
       `${HOME}/.elm/0.19.1/packages/NoRedInk/elm-json-decode-pipeline/1.0.0`,
       `${HOME}/.elm/0.19.1/packages/elm/browser/1.0.0`,
@@ -322,7 +323,7 @@ describe("resolveDependencies()", () => {
 
   test("should throw if package project is specified", () => {
     expect(() => {
-      resolveDependencies("src/fixtures/elm-test/elm.json");
+      resolveDependencies("src/fixtures/elm-test/elm.json", ELM_HOME);
     }).toThrow();
   });
 });
@@ -401,7 +402,11 @@ update`);
   });
 
   test("should generate and save cache for dependencies in a project (combined with resolveDependencies())", () => {
-    const deps = resolveDependencies("src/fixtures/elm-spa-example/elm.json");
+    const ELM_HOME = path.resolve(process.env.HOME, ".elm");
+    const deps = resolveDependencies(
+      "src/fixtures/elm-spa-example/elm.json",
+      ELM_HOME
+    );
     const cacheFile = path.resolve("tmp", "cache.txt");
 
     // Generates many identifiers from deps
