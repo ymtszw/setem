@@ -1,6 +1,6 @@
 {
   "name": "setem",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "description": "Set'em: Elm record setter generator",
   "repository": {
     "url": "https://github.com/ymtszw/setem"
@@ -37,7 +37,6 @@
     "jest": "~29"
   },
   "scripts": {
-    "pretest": "cd src/fixtures/elm-spa-example/ && ../../../node_modules/.bin/elm make src/Main.elm --output elm.js",
     "setem": "src/setem.js",
     "test": "jest",
     "test:cli": "src/setem.test.sh"
