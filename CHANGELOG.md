@@ -2,7 +2,8 @@
 
 ## Upcoming
 
-* ...
+* [**Behavioral Change**] It now automatically downloads all the missing dependencies using dummy application and `elm make`
+* Support Node.js 20
 
 ## 0.4.0
 
