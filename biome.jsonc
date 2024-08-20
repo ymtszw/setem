@@ -24,12 +24,12 @@
     "rules": {
       "recommended": true,
       "complexity": {
-        "noForEach": "off",
-        "useLiteralKeys": "off"
+        "noForEach": "off", // I like function-chaining style better
+        "useLiteralKeys": "off" // I don't want to apply different styles to kebab-cased keys
       },
       "style": {
-        "noUselessElse": "off",
-        "useDefaultParameterLast": "off"
+        "noUselessElse": "off", // Explicit else is better; shorter indentation means little
+        "useDefaultParameterLast": "off" // Could be useful but hesitant to upgrade existing code
       }
     }
   }
