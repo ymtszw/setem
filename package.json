@@ -35,6 +35,8 @@
   },
   "scripts": {
     "setem": "src/setem.js",
+    "lint": "biome check",
+    "lint:fix": "biome check --fix",
     "test": "jest",
     "test:cli": "src/setem.test.sh"
   }
