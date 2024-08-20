@@ -57,9 +57,9 @@ jobs:
         with:
           path: |
             ~/.bun/install/cache
-          key: bun-setem-${{ steps.setup-bun.outputs.bun-version }}-${{ hashFiles('package-lock.json') }}-${{ github.sha }}
+          key: bun-setem-${{ steps.setup-bun.outputs.bun-version }}-${{ hashFiles('bun.lockb') }}-${{ github.sha }}
           restore-keys: |
-            bun-setem-${{ steps.setup-bun.outputs.bun-version }}-${{ hashFiles('package-lock.json') }}-
+            bun-setem-${{ steps.setup-bun.outputs.bun-version }}-${{ hashFiles('bun.lockb') }}-
       - run: bun install
       - run: bun run lint
       - run: bun run test

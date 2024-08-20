@@ -2,6 +2,13 @@
 
 ## Upcoming
 
+...
+
+## 0.6.1
+
+* It *SHOULD* now support Bun as its runtime 🎉
+  * See `bun-checks` in [`sanity_check` workflow](https://github.com/ymtszw/setem/actions/workflows/sanity_check.yml) for what's confirmed
+
 ## 0.6.0
 
 * Support Node.js 22
