@@ -1,10 +1,10 @@
 const Parser = require("tree-sitter");
 const Elm = require("@elm-tooling/tree-sitter-elm");
-const fs = require("fs");
-const path = require("path");
+const fs = require("node:fs");
+const path = require("node:path");
 const glob = require("glob");
-const assert = require("assert").strict;
-const crypto = require("crypto");
+const assert = require("node:assert").strict;
+const crypto = require("node:crypto");
 const child_process = require("node:child_process");
 
 module.exports = {
@@ -23,21 +23,10 @@ module.exports = {
  * @param {boolean} hasExplicitPaths If `true`, it does not generate setters from dependencies. (For backward compatibility)
  * @returns string
  */
-function generate(
-  filepaths,
-  moduleName = "RecordSetter",
-  prefix = "s_",
-  elmJsonFile = null,
-  hasExplicitPaths
-) {
+function generate(filepaths, moduleName = "RecordSetter", prefix = "s_", elmJsonFile = null, hasExplicitPaths) {
   const uniqIdentifiers = [filepaths].flat().reduce(reducePerFile, new Set());
-  const dependencyIdentifiers = collectIdentifiersFromDependencies(
-    elmJsonFile,
-    hasExplicitPaths
-  );
-  const sortedUniqIdentifiers = [
-    ...new Set([...uniqIdentifiers, ...dependencyIdentifiers]),
-  ].sort();
+  const dependencyIdentifiers = collectIdentifiersFromDependencies(elmJsonFile, hasExplicitPaths);
+  const sortedUniqIdentifiers = [...new Set([...uniqIdentifiers, ...dependencyIdentifiers])].sort();
   const setters = sortedUniqIdentifiers.map(setterDefinition(prefix));
   return [moduleDeclaration(moduleName), ...setters].join("\n\n");
 }
@@ -70,12 +59,12 @@ function sourceToIdentifiers(source, identifierSet = new Set()) {
 }
 
 function setterDefinition(prefix) {
-  return function (recordFieldIdentifier) {
-    return `${prefix}${recordFieldIdentifier} : a -> { b | ${recordFieldIdentifier} : a } -> { b | ${recordFieldIdentifier} : a }
+  return (
+    recordFieldIdentifier,
+  ) => `${prefix}${recordFieldIdentifier} : a -> { b | ${recordFieldIdentifier} : a } -> { b | ${recordFieldIdentifier} : a }
 ${prefix}${recordFieldIdentifier} value__ record__ =
     { record__ | ${recordFieldIdentifier} = value__ }
 `;
-  };
 }
 
 function moduleDeclaration(moduleName) {
@@ -114,11 +103,7 @@ function getElmJson(elmJsonFile) {
   const elmJsonFileAbs = path.resolve(elmJsonFile);
   const elmJsonRaw = fs.readFileSync(elmJsonFileAbs, { encoding: "utf8" });
   const elmJson = JSON.parse(elmJsonRaw);
-  assert.equal(
-    elmJson.type,
-    "application",
-    "setem should not be used in package, to avoid module name conflict!"
-  );
+  assert.equal(elmJson.type, "application", "setem should not be used in package, to avoid module name conflict!");
   return elmJson;
 }
 
@@ -141,17 +126,9 @@ function collectIdentifiersFromDependencies(elmJsonFile, hasExplicitPaths) {
       (process.env.HOME && path.resolve(process.env.HOME, ".elm")) ||
       assert.fail("$HOME or $ELM_HOME must exist!"); // XXX Windows aren't supported
     const dependencies = resolveDependencies(elmJsonFile, elmHome);
-    const dependenciesDownloaded = ensureDependenciesDownloaded(
-      elmJsonFile,
-      elmHome,
-      dependencies
-    );
+    const dependenciesDownloaded = ensureDependenciesDownloaded(elmJsonFile, elmHome, dependencies);
     const cacheFile = dependencyIdentifierCacheFile(elmJsonFile, dependencies);
-    return getIdentifiersAndEnsureCache(
-      dependencies,
-      cacheFile,
-      dependenciesDownloaded
-    );
+    return getIdentifiersAndEnsureCache(dependencies, cacheFile, dependenciesDownloaded);
   } else {
     return [];
   }
@@ -167,9 +144,7 @@ function collectIdentifiersFromDependencies(elmJsonFile, hasExplicitPaths) {
 function ensureDependenciesDownloaded(elmJsonFile, elmHome, dependencies) {
   assert.equal(path.isAbsolute(elmHome), true);
   if (dependencies.some((dep) => !fs.existsSync(dep))) {
-    console.log(
-      "[setem] Some dependencies are not downloaded yet. Downloading with dummy app..."
-    );
+    console.log("[setem] Some dependencies are not downloaded yet. Downloading with dummy app...");
     downloadDependenciesUsingDummyElmApp(elmJsonFile, elmHome);
     return true;
   } else {
@@ -180,9 +155,7 @@ function ensureDependenciesDownloaded(elmJsonFile, elmHome, dependencies) {
 function downloadDependenciesUsingDummyElmApp(elmJsonFile, elmHome) {
   assert.equal(path.isAbsolute(elmHome), true);
   const elmJsonFileAbs = path.resolve(elmJsonFile);
-  const elmJson = JSON.parse(
-    fs.readFileSync(elmJsonFileAbs, { encoding: "utf8" })
-  );
+  const elmJson = JSON.parse(fs.readFileSync(elmJsonFileAbs, { encoding: "utf8" }));
   elmJson["source-directories"] = ["dummySrc"];
 
   // Make all dependencies as direct, so that it can be downloaded at once;
@@ -199,12 +172,7 @@ function downloadDependenciesUsingDummyElmApp(elmJsonFile, elmHome) {
   // Generate dummy app in elm-stuff/setem/dummy_app_<project name>/
   const elmProjectDir = path.dirname(elmJsonFileAbs);
   const dummyElmAppName = `dummy_app_${path.basename(elmProjectDir)}`;
-  const dummyElmAppDir = path.join(
-    elmProjectDir,
-    "elm-stuff",
-    "setem",
-    dummyElmAppName
-  );
+  const dummyElmAppDir = path.join(elmProjectDir, "elm-stuff", "setem", dummyElmAppName);
   const dummySrcDir = path.join(dummyElmAppDir, "dummySrc");
   fs.mkdirSync(dummySrcDir, { recursive: true });
   const dummyElmJsonFile = path.join(dummyElmAppDir, "elm.json");
@@ -215,27 +183,18 @@ function downloadDependenciesUsingDummyElmApp(elmJsonFile, elmHome) {
   // Compile the dummy app
   const customPath = pathWithPossibleNodeModulesBinDirs();
   const customEnv = { ...process.env, PATH: customPath, ELM_HOME: elmHome };
-  child_process.execFileSync(
-    "elm",
-    ["make", dummyMainFile, "--output=/dev/null"],
-    { cwd: dummyElmAppDir, stdio: "inherit", env: customEnv }
-  );
+  child_process.execFileSync("elm", ["make", dummyMainFile, "--output=/dev/null"], {
+    cwd: dummyElmAppDir,
+    stdio: "inherit",
+    env: customEnv,
+  });
 }
 
 function dependencyIdentifierCacheFile(elmJsonFile, dependencies) {
   const elmProjectDir = path.dirname(elmJsonFile);
-  const dependenciesHash = crypto
-    .createHash("md5")
-    .update(dependencies.toString())
-    .digest("hex");
+  const dependenciesHash = crypto.createHash("md5").update(dependencies.toString()).digest("hex");
 
-  return path.resolve(
-    elmProjectDir,
-    "elm-stuff",
-    "setem",
-    "cache",
-    `${dependenciesHash}.txt`
-  );
+  return path.resolve(elmProjectDir, "elm-stuff", "setem", "cache", `${dependenciesHash}.txt`);
 }
 
 /**
@@ -246,21 +205,14 @@ function dependencyIdentifierCacheFile(elmJsonFile, dependencies) {
  * @param {boolean} dependenciesDownloaded Whether dependencies are just downloaded or not. If true, it ignores cache.
  * @returns string[]
  */
-function getIdentifiersAndEnsureCache(
-  dependencies,
-  cacheFile,
-  dependenciesDownloaded
-) {
+function getIdentifiersAndEnsureCache(dependencies, cacheFile, dependenciesDownloaded) {
   if (!dependenciesDownloaded && fs.existsSync(cacheFile)) {
     return fs
       .readFileSync(cacheFile, { encoding: "utf8" })
       .split("\n")
       .filter((s) => s !== "");
   } else {
-    const dependencyIdentifiers = dependencies.reduce(
-      reducePerDependency,
-      new Set()
-    );
+    const dependencyIdentifiers = dependencies.reduce(reducePerDependency, new Set());
     const sortedIdentifiers = [...dependencyIdentifiers].sort();
     fs.mkdirSync(path.dirname(cacheFile), { recursive: true });
     fs.writeFileSync(cacheFile, sortedIdentifiers.join("\n"));
@@ -269,15 +221,8 @@ function getIdentifiersAndEnsureCache(
 }
 
 function reducePerDependency(identifierSet, dependencyDir) {
-  const dependencySourcePattern = path.resolve(
-    dependencyDir,
-    "src",
-    "**",
-    "*.elm"
-  );
-  return glob
-    .sync(dependencySourcePattern)
-    .reduce(reducePerFile, identifierSet);
+  const dependencySourcePattern = path.resolve(dependencyDir, "src", "**", "*.elm");
+  return glob.sync(dependencySourcePattern).reduce(reducePerFile, identifierSet);
 }
 
 /**
@@ -307,14 +252,12 @@ function fromDependencyObject(obj, packagesDir) {
 
 function pathWithPossibleNodeModulesBinDirs() {
   let cwdOrAncestors = process.cwd();
-  let ret = [];
+  const ret = [];
   while (cwdOrAncestors !== path.dirname(cwdOrAncestors)) {
     ret.push(cwdOrAncestors);
     cwdOrAncestors = path.dirname(cwdOrAncestors);
   }
-  const nodeModulesBinPaths = ret
-    .map((cwdOrAncestor) => path.join(cwdOrAncestor, "node_modules", ".bin"))
-    .join(path.delimiter);
+  const nodeModulesBinPaths = ret.map((cwdOrAncestor) => path.join(cwdOrAncestor, "node_modules", ".bin")).join(path.delimiter);
   return [process.env.PATH, nodeModulesBinPaths].join(path.delimiter);
 }
 

@@ -1,6 +1,6 @@
 #!/usr/bin/env node
-const fs = require("fs");
-const path = require("path");
+const fs = require("node:fs");
+const path = require("node:path");
 const { Command } = require("commander");
 const chalk = require("chalk");
 const { name, description, version } = require("../package.json");
@@ -11,29 +11,20 @@ program
   .name(name)
   .description(description)
   .version(version)
-  .option(
-    "--stdout",
-    "Print generated file contents to stdout instead of a file"
-  )
-  .option(
-    "--src, --output <srcDirectory>",
-    "Set Elm src directory to write generated file to. Defaults to current working directory"
-  )
-  .option(
-    "--prefix <function prefix>",
-    "Set prefix of generated functions. Defaults to `s_`"
-  )
+  .option("--stdout", "Print generated file contents to stdout instead of a file")
+  .option("--src, --output <srcDirectory>", "Set Elm src directory to write generated file to. Defaults to current working directory")
+  .option("--prefix <function prefix>", "Set prefix of generated functions. Defaults to `s_`")
   .option(
     "--module <moduleName>",
     `Set generated module name (also, file name). Defaults to \`RecordSetter\`.
 Must be fully qualified
-`
+`,
   )
   .option(
     "--elm-json <elm.json file path>",
     `Set path to elm.json file you would like to use for automatic source and dependency detection.
 Takes effect only if explicit paths are NOT given.
-Defaults to ./elm.json`
+Defaults to ./elm.json`,
   )
   .option("--verbose", "Print all loaded files")
   .arguments("[paths...]")
@@ -44,24 +35,13 @@ function mainAction(args, options) {
   const prefix = options.prefix === undefined ? "s_" : options.prefix;
   const elmJsonFile = options.elmJson || "./elm.json";
   const hasExplicitPaths = args.length !== 0;
-  const moduleFilename = path.join(...module.split(".")) + ".elm";
-  const outputPath = path.resolve(
-    options.src || options.output || process.cwd(),
-    moduleFilename
-  );
+  const moduleFilename = `${path.join(...module.split("."))}.elm`;
+  const outputPath = path.resolve(options.src || options.output || process.cwd(), moduleFilename);
   // Do not include generated file itself, so that no-longer-existing record fields are propertly removed from the result!
-  const paths = resolvePaths(args, elmJsonFile).filter(
-    (path) => path !== outputPath
-  );
+  const paths = resolvePaths(args, elmJsonFile).filter((path) => path !== outputPath);
 
   if (options.verbose) for (const path of paths) fileLoaded(path);
-  const generated = generate(
-    paths,
-    module,
-    prefix,
-    elmJsonFile,
-    hasExplicitPaths
-  );
+  const generated = generate(paths, module, prefix, elmJsonFile, hasExplicitPaths);
 
   if (options.stdout) {
     console.log(generated);
