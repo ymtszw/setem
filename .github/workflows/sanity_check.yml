@@ -60,7 +60,7 @@ jobs:
           key: bun-setem-${{ steps.setup-bun.outputs.bun-version }}-${{ hashFiles('package-lock.json') }}-${{ github.sha }}
           restore-keys: |
             bun-setem-${{ steps.setup-bun.outputs.bun-version }}-${{ hashFiles('package-lock.json') }}-
-      - run: bun install --no-save
+      - run: bun install
       - run: bun run lint
       - run: bun run test
       - run: bun run test:cli
