@@ -1,8 +1,8 @@
 {
-  "[js]": {
+  "[javascript]": {
     "editor.defaultFormatter": "biomejs.biome"
   },
-  "[ts]": {
+  "[typescript]": {
     "editor.defaultFormatter": "biomejs.biome"
   },
   "[json]": {
