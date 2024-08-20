@@ -202,19 +202,31 @@ In this scenario, tokens from your dependencies are cached in your `elm-stuff/se
 
 ## Development
 
-Install reasonably new Node.js. If you are using `mise`,
+Install reasonably new [Bun](https://bun.sh/). If you are using `mise` (successor of `asdf`, `rtx`), do the following:
 
 ```sh
 git clone git@github.com:ymtszw/setem.git
 cd setem/
 git submodule update --init --recursive
+mise install # See .tool-versions for reference versions
+bun run lint
+bun run test # `bun test` still not supported; we use jest under the hood
+bun run test:cli
+```
+
+In GitHub Actions, [sanity checks](https://github.com/ymtszw/setem/actions/workflows/sanity_check.yml) are performed against multiple runtimes such as recent LTS Node.js versions and Bun!
+
+<details>
+<summary>Or, you can still use Node.js</summary>
+
+```sh
 mise install
-npm install
+npm run lint
 npm run test
 npm run test:cli
 ```
 
-In GitHub Actions, [sanity checks](https://github.com/ymtszw/setem/actions/workflows/sanity_check.yml) are performed against recent LTS Node.js versions (14,16,18)
+</details>
 
 ## Author & License
 

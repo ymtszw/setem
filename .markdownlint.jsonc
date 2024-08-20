@@ -1,0 +1,7 @@
+{
+  "$schema": "https://raw.githubusercontent.com/DavidAnson/markdownlint/master/schema/markdownlint-config-schema.json",
+  "MD013": false,
+  "MD033": {
+    "allowed_elements": ["details", "summary"]
+  }
+}
