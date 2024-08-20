@@ -40,8 +40,5 @@
     "test": "jest",
     "test:cli": "src/setem.test.sh"
   },
-  "trustedDependencies": [
-    "@biomejs/biome",
-    "@elm-tooling/tree-sitter-elm"
-  ]
+  "trustedDependencies": ["@biomejs/biome", "@elm-tooling/tree-sitter-elm"]
 }
