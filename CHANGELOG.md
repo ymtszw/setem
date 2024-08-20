@@ -2,7 +2,10 @@
 
 ## Upcoming
 
-...
+## 0.6.0
+
+* Support Node.js 22
+* [**BREAKING**] Drop support for Node.js 14
 
 ## 0.5.0
 
