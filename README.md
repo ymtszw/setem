@@ -202,13 +202,13 @@ In this scenario, tokens from your dependencies are cached in your `elm-stuff/se
 
 ## Development
 
-Install reasonably new [Bun](https://bun.sh/). If you are using `mise`, do the following:
+Install reasonably new [Bun](https://bun.sh/). If you are using `mise` (successor of `asdf`, `rtx`), do the following:
 
 ```sh
 git clone git@github.com:ymtszw/setem.git
 cd setem/
 git submodule update --init --recursive
-mise install
+mise install # See .tool-versions for reference versions
 bun run lint
 bun run test # `bun test` still not supported; we use jest under the hood
 bun run test:cli
