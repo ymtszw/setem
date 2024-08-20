@@ -216,6 +216,18 @@ bun run test:cli
 
 In GitHub Actions, [sanity checks](https://github.com/ymtszw/setem/actions/workflows/sanity_check.yml) are performed against multiple runtimes such as recent LTS Node.js versions and Bun!
 
+<details>
+<summary>Or, you can still use Node.js</summary>
+
+```sh
+mise install
+npm run lint
+npm run test
+npm run test:cli
+```
+
+</details>
+
 ## Author & License
 
 MIT License (c) **Yu Matsuzawa**
