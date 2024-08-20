@@ -202,14 +202,14 @@ In this scenario, tokens from your dependencies are cached in your `elm-stuff/se
 
 ## Development
 
-Install reasonably new Node.js. If you are using `asdf`,
+Install reasonably new Node.js. If you are using `mise`,
 
 ```sh
 git clone git@github.com:ymtszw/setem.git
 cd setem/
 git submodule update --init --recursive
-asdf install
-npm ci
+mise install
+npm install
 npm run test
 npm run test:cli
 ```
