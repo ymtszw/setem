@@ -43,3 +43,24 @@ jobs:
       - run: npm run lint
       - run: npm run test
       - run: npm run test:cli
+  bun-checks:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: true
+      - id: setup-bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version-file: ".tool-versions"
+      - uses: actions/cache@v4
+        with:
+          path: |
+            ~/.bun/install/cache
+          key: bun-setem-${{ steps.setup-bun.outputs.bun-version }}-${{ hashFiles('bun.lockb') }}-${{ github.sha }}
+          restore-keys: |
+            bun-setem-${{ steps.setup-bun.outputs.bun-version }}-${{ hashFiles('bun.lockb') }}-
+      - run: bun install
+      - run: bun run lint
+      - run: bun run test
+      - run: bun run test:cli

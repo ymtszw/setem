@@ -1,6 +1,6 @@
 {
   "name": "setem",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "description": "Set'em: Elm record setter generator",
   "repository": {
     "url": "https://github.com/ymtszw/setem"
@@ -39,5 +39,6 @@
     "lint:fix": "biome check --fix",
     "test": "jest",
     "test:cli": "src/setem.test.sh"
-  }
+  },
+  "trustedDependencies": ["@biomejs/biome", "@elm-tooling/tree-sitter-elm", "elm", "tree-sitter"]
 }
