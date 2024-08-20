@@ -14,11 +14,7 @@
     "setem": "src/setem.js"
   },
   "preferGlobal": false,
-  "keywords": [
-    "cli",
-    "elm",
-    "generator"
-  ],
+  "keywords": ["cli", "elm", "generator"],
   "engines": {
     "node": ">=14"
   },
@@ -32,6 +28,7 @@
     "tree-sitter": "^0.20.6"
   },
   "devDependencies": {
+    "@biomejs/biome": "1.8.3",
     "@types/jest": "~29",
     "elm": ">=0.19.1-5",
     "jest": "~29"
