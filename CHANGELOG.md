@@ -4,6 +4,10 @@
 
 ...
 
+## 0.6.2
+
+* Lock requirements of `tree-sitter-elm` to `<5.8.0` due to <https://github.com/elm-tooling/tree-sitter-elm/issues/186>
+
 ## 0.6.1
 
 * It *SHOULD* now support Bun as its runtime 🎉
