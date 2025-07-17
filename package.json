@@ -22,11 +22,11 @@
   "license": "MIT",
   "// dependencies[@elm-tooling/tree-sitter-elm]": "5.8 declares peerDependency to tree-sitter 0.21.1, which crashes on parser.setLanguage(). https://github.com/elm-tooling/tree-sitter-elm/issues/186",
   "dependencies": {
-    "@elm-tooling/tree-sitter-elm": "<5.8.0",
+    "@elm-tooling/tree-sitter-elm": "^5.8.0",
     "chalk": "^4.1",
     "commander": "~10",
     "glob": "~10",
-    "tree-sitter": "^0.20.6"
+    "tree-sitter": "^0.25"
   },
   "devDependencies": {
     "@biomejs/biome": "1.8.3",
