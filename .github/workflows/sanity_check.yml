@@ -26,7 +26,7 @@ jobs:
           - 20
           - 22
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
         with:
           submodules: true
       - uses: actions/cache@v4
@@ -46,7 +46,7 @@ jobs:
   bun-checks:
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
         with:
           submodules: true
       - id: setup-bun
