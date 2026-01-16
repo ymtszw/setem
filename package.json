@@ -3,7 +3,7 @@
   "version": "0.7.0",
   "description": "Set'em: Elm record setter generator",
   "repository": {
-    "url": "https://github.com/ymtszw/setem"
+    "url": "git+https://github.com/ymtszw/setem.git"
   },
   "homepage": "https://github.com/ymtszw/setem",
   "bugs": {
