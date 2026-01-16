@@ -1,7 +1,11 @@
 {
   "$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
-  "organizeImports": {
-    "enabled": true
+  "assist": {
+    "actions": {
+      "source": {
+        "organizeImports": "on"
+      }
+    }
   },
   "vcs": {
     "enabled": true,
@@ -10,8 +14,7 @@
     "defaultBranch": "master"
   },
   "files": {
-    "include": ["*.js", "*.ts", "*.json", "*.jsonc"],
-    "ignore": ["src/fixtures/elm-*", "package-lock.json"]
+    "includes": ["*.js", "*.ts", "*.json", "*.jsonc"]
   },
   "formatter": {
     "enabled": true,
