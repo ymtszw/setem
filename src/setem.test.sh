@@ -103,6 +103,7 @@ STAT=$(if which gstat > /dev/null; then echo "gstat"; else echo "stat"; fi)
   git diff --no-index RecordSetter.elm src/fixtures/elm-spa-example-cli-result && rm RecordSetter.elm
 
 # Should respect ELM_HOME on generation, with downloading all the deps
+  mkdir -p tmp/.elm
   ELM_HOME=$(realpath tmp/.elm/)
   export ELM_HOME
   rm -rf "$ELM_HOME"
