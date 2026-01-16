@@ -16,6 +16,10 @@
 ## Prerequisites
 
 - Reasonably new `nodejs`
+- Environment for building native modules (tree-sitter)
+  - On macOS, `xcode-select --install` and `brew install python python-setuptools`
+  - On Ubuntu/Debian, `sudo apt-get install build-essential python3-setuptools`
+  - It may require a bit more auxiliary packages depending on your environment.
 
 ## Install
 
