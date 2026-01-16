@@ -16,22 +16,23 @@
   "preferGlobal": false,
   "keywords": ["cli", "elm", "generator"],
   "engines": {
-    "node": ">=14"
+    "node": ">=18"
   },
   "author": "Yu Matsuzawa <ymtszw@gmail.com>",
   "license": "MIT",
+  "// dependencies[chalk]": "v5.x is ESM-only, which I cannot afford bandwidth to migrate to.",
   "dependencies": {
     "@elm-tooling/tree-sitter-elm": "^5.8.0",
     "chalk": "^4.1",
-    "commander": "~10",
-    "glob": "~10",
+    "commander": "~14",
+    "glob": "~13",
     "tree-sitter": "^0.25"
   },
   "devDependencies": {
-    "@biomejs/biome": "1.8.3",
-    "@types/jest": "~29",
+    "@biomejs/biome": "^2.3",
+    "@types/jest": "~30",
     "elm": ">=0.19.1-5",
-    "jest": "~29"
+    "jest": "~30"
   },
   "scripts": {
     "setem": "src/setem.js",
