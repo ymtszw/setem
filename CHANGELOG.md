@@ -4,6 +4,10 @@
 
 ...
 
+## 0.7.0
+
+* Update `tree-sitter-elm` to `^5.8.0` with upstream fixes (<https://github.com/ymtszw/setem/pull/25>)
+
 ## 0.6.2
 
 * Lock requirements of `tree-sitter-elm` to `<5.8.0` due to <https://github.com/elm-tooling/tree-sitter-elm/issues/186>
