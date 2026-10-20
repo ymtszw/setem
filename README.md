@@ -15,7 +15,7 @@
 
 ## Prerequisites
 
-- Reasonably new `nodejs`
+- Node.js 20 or newer (Node.js 16 and 18 are no longer supported as of setem 1.0.0).
 - Environment for building native modules (tree-sitter)
   - Node.js 24 requires a C++20-capable compiler and `tree-sitter` 0.25.1 or newer.
   - On macOS, `xcode-select --install` and `brew install python python-setuptools`
