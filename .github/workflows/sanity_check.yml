@@ -21,8 +21,6 @@ jobs:
       fail-fast: false
       matrix:
         node-version:
-          - 16
-          - 18
           - 20
           - 22
           - 24
@@ -47,6 +45,14 @@ jobs:
       - run: npm run lint
       - run: npm run test
       - run: npm run test:cli
+      - name: Verify packed package with fresh dependencies
+        run: |
+          package_dir=$(mktemp -d)
+          package_tarball=$(npm pack --pack-destination "$package_dir" --silent)
+          npm install --prefix "$package_dir" "$package_dir/$package_tarball" --engine-strict --no-audit --no-fund
+          "$package_dir/node_modules/.bin/setem" --version
+          "$package_dir/node_modules/.bin/setem" --stdout src/fixtures/RecordDefAndExpr.elm |
+            diff --ignore-blank-lines -u src/fixtures/minimal-cli-result -
   bun-checks:
     runs-on: ubuntu-22.04
     steps:

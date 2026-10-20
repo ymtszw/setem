@@ -183,11 +183,36 @@ function downloadDependenciesUsingDummyElmApp(elmJsonFile, elmHome) {
   // Compile the dummy app
   const customPath = pathWithPossibleNodeModulesBinDirs();
   const customEnv = { ...process.env, PATH: customPath, ELM_HOME: elmHome };
-  child_process.execFileSync("elm", ["make", dummyMainFile, "--output=/dev/null"], {
-    cwd: dummyElmAppDir,
-    stdio: "inherit",
-    env: customEnv,
-  });
+  const compilerCacheDir = path.join(dummyElmAppDir, "elm-stuff", elmJson["elm-version"]);
+  const detailsFile = path.join(compilerCacheDir, "d.dat");
+  for (let attempt = 1; attempt <= 3; attempt++) {
+    const result = child_process.spawnSync("elm", ["make", dummyMainFile, "--output=/dev/null"], {
+      cwd: dummyElmAppDir,
+      stdio: ["inherit", "pipe", "pipe"],
+      encoding: "utf8",
+      maxBuffer: 16 * 1024 * 1024,
+      env: customEnv,
+    });
+    if (result.stdout) process.stdout.write(result.stdout);
+    if (result.stderr) process.stderr.write(result.stderr);
+    if (result.error) throw result.error;
+    if (result.status === 0) return;
+
+    // Elm can race its own background writer when initializing d.dat.
+    // https://github.com/elm/compiler/issues/2258
+    const detailsLocked = ["openBinaryFile", "withBinaryFile"].some((operation) =>
+      (result.stderr || "").includes(`${detailsFile}: ${operation}: resource busy (file is locked)`),
+    );
+    if (detailsLocked && !result.signal && attempt < 3) {
+      fs.rmSync(compilerCacheDir, { recursive: true, force: true });
+      console.error(`[setem] Elm's dummy-app cache was locked; retrying compilation (${attempt + 1}/3).`);
+      continue;
+    }
+    throw Object.assign(new Error(`elm make failed (${result.signal || `exit code ${result.status}`})`), {
+      status: result.status,
+      signal: result.signal,
+    });
+  }
 }
 
 function dependencyIdentifierCacheFile(elmJsonFile, dependencies) {
