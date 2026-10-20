@@ -8,6 +8,7 @@
 
 * [**BREAKING**] Drop support for Node.js 16 and 18; require Node.js 20 or newer.
 * Update `tree-sitter-elm` to 5.9.4.
+* Retry transient Elm `d.dat` lock failures while downloading dependencies, with at most three compilation attempts.
 * Verify clean installation and setter generation from the packed npm package on Node.js 20, 22, and 24.
 
 ## 0.8.0
