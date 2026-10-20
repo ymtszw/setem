@@ -30,7 +30,7 @@
     "chalk": "^4.1",
     "commander": "~14",
     "glob": "~13",
-    "tree-sitter": "^0.25"
+    "tree-sitter": "^0.25.1"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.3",
