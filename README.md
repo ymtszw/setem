@@ -17,6 +17,7 @@
 
 - Reasonably new `nodejs`
 - Environment for building native modules (tree-sitter)
+  - Node.js 24 requires a C++20-capable compiler and `tree-sitter` 0.25.1 or newer.
   - On macOS, `xcode-select --install` and `brew install python python-setuptools`
   - On Ubuntu/Debian, `sudo apt-get install build-essential python3-setuptools`
   - It may require a bit more auxiliary packages depending on your environment.
