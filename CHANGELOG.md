@@ -4,6 +4,11 @@
 
 ...
 
+## 0.8.0
+
+* Support Node.js 24 by updating `tree-sitter` to `^0.25.1`, which fixes native builds requiring C++20.
+* Keep Node.js 16 support; CI passes on Node.js 16, 18, 20, 22, and 24, as well as Bun.
+
 ## 0.7.0
 
 * Update `tree-sitter-elm` to `^5.8.0` with upstream fixes (<https://github.com/ymtszw/setem/pull/25>)
