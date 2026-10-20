@@ -8,6 +8,7 @@
 
 * [**BREAKING**] Drop support for Node.js 16 and 18; require Node.js 20 or newer.
 * Update `tree-sitter-elm` to 5.9.4 and Biome to 2.5.15, incorporating the dependency updates from [#62](https://github.com/ymtszw/setem/pull/62).
+* Update vulnerable transitive dependencies and upgrade Jest to 30.5.2 with matching Jest 30 types.
 * Verify clean installation and setter generation from the packed npm package on Node.js 20, 22, and 24.
 
 ## 0.8.0
